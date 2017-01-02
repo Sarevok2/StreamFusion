@@ -1,0 +1,46 @@
+body {
+	background-color: #222222;
+	color: white;
+	font-size: 20px;
+}
+
+a:link, a:visited, .file-link {
+	color: #00BBFF;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.panel {
+	border: 1px solid #000000;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	max-width: 1200px;
+}
+
+.folder-item {
+	padding: 5px;
+	border-color: #222222;
+	border-top: solid 1px #777777;
+}
+
+h3 {
+	margin: 0px 0px 2px 0px;
+	padding-left: 5px;
+	background-color: #333333;
+}
+
+button {
+	background-color: #444444;
+	color: white;
+	border: 1px solid #888888;
+	border-radius: 5px;
+}
+
+.button-bar {
+	float:right;
+}
+
+.playlist-item {
+	height: 30px;
+	border-top: solid 1px #777777;
+}

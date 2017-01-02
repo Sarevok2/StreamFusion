@@ -1,0 +1,21 @@
+<h3>
+    Folders
+    <span class="file-link" *ngIf="goUpVisible()" (click)="goUp()"><img src="assets/svg/upload.svg" width="20" height="20"></span>
+</h3>
+
+<div class="folder-item" *ngFor="let folder of dirList.folders">
+    <span class="file-link" (click)="onFolderClick(folder)">{{folder}}</span>
+    <div class="button-bar">
+        <button (click)="onAddDir(folder, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
+        <button (click)="onAddDir(folder, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+    </div>
+</div>
+
+<h3>Songs</h3>
+<div class="folder-item" *ngFor="let file of dirList.files">
+    {{file}}
+    <div class="button-bar">
+        <button (click)="onAddSong(file, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
+        <button (click)="onAddSong(file, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+    </div>
+</div>

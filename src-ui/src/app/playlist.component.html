@@ -1,0 +1,21 @@
+<div class="panel">
+    <audioPlayer (onSongEnded)="onSongEnded($event)"></audioPlayer>
+    <button (click)="previous()"><img src="assets/svg/previous.svg" width="20" height="20"></button><!--{{action 'prev'}}-->
+    <button (click)="nextSong()"><img src="assets/svg/next.svg" width="20" height="20"></button> <!--{{action 'next'}}-->
+    <h3>
+        Playlist
+        <button (click)="toggleExpanded()"><img src="assets/svg/collapse.svg" width="20" height="20"></button>
+        <button (click)="clear()"><img src="assets/svg/remove-symbol.svg" width="20" height="20"></button>
+    </h3>
+
+    <div id="playlist-container" class="playlist-expanded" *ngIf="expanded">
+        <div class="playlist-item" *ngFor="let song of songs; let i = index">
+            <span *ngIf="i == currentIndex">* </span>{{(i+1) + " - " + song.name}}
+            <div class="button-bar">
+                <button (click)="onPlaySong(i)"><img src="assets/svg/play.svg" width="20" height="20"></button>
+                <button (click)="onRemoveSong(i)"><img src="assets/svg/remove-symbol.svg" width="20" height="20"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
