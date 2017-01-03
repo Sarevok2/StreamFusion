@@ -1,4 +1,9 @@
-<audio id="audioPlayer" controls preload="none">
+<audio id="audio-player" preload="none">
     <source id="audiosource" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
+<button class="play-button" (click)="onPlayPause()"><img [src]="playPauseImage" alt="play/pause" width="20" height="20"></button>
+{{currentTime}}/{{duration}}
+<div id="seek-bar" class="seek-bar" (click)="onSeekBarClick($event)">
+	 <div [style.marginLeft]="seekMarkerPos" id="seek-marker" class="seek-marker"></div>
+</div>

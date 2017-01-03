@@ -1,7 +1,11 @@
 <div class="panel">
-    <audioPlayer (onSongEnded)="onSongEnded($event)"></audioPlayer>
-    <button (click)="previous()"><img src="assets/svg/previous.svg" width="20" height="20"></button><!--{{action 'prev'}}-->
-    <button (click)="nextSong()"><img src="assets/svg/next.svg" width="20" height="20"></button> <!--{{action 'next'}}-->
+    <div style="height: 30px; margin-bottom: 10px">
+        <audioPlayer (onSongEnded)="onSongEnded($event)"></audioPlayer>
+        <div style="float: right">
+            <button (click)="previous()"><img src="assets/svg/previous.svg" width="20" height="20"></button><!--{{action 'prev'}}-->
+            <button (click)="nextSong()"><img src="assets/svg/next.svg" width="20" height="20"></button> <!--{{action 'next'}}-->
+        </div>
+    </div>
     <h3>
         Playlist
         <button (click)="toggleExpanded()"><img src="assets/svg/collapse.svg" width="20" height="20"></button>
