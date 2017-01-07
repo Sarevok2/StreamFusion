@@ -26,7 +26,7 @@ var AppConfig = (function () {
             return "";
         }
         else {
-            return "http://localhost:8080/musicstream/";
+            return "http://localhost:8080/";
         }
     };
     AppConfig = __decorate([
@@ -36,7 +36,7 @@ var AppConfig = (function () {
     return AppConfig;
 }());
 ;
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/app.config.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/app.config.js.map
 
 /***/ },
 
@@ -78,7 +78,7 @@ var AppComponent = (function () {
     return AppComponent;
     var _a;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/app.component.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/app.component.js.map
 
 /***/ },
 
@@ -98,22 +98,75 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+var PLAY_IMAGE = "assets/svg/play.svg";
+var PAUSE_IMAGE = "assets/svg/pause.svg";
 var AudioComponent = (function () {
     function AudioComponent() {
         this.onSongEnded = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_7" /* EventEmitter */]();
+        this.isPlaying = false;
+        this.playPauseImage = PLAY_IMAGE;
+        this.currentTime = "0.00";
+        this.duration = "0.00";
     }
     AudioComponent.prototype.ngOnInit = function () {
-        this.audioElement = document.getElementById("audioPlayer");
+        var _this = this;
+        this.audioElement = document.getElementById("audio-player");
+        this.seekBarElement = document.getElementById("seek-bar");
+        this.audioElement.addEventListener("timeupdate", function () { return _this.timeUpdate(); }, false);
     };
     AudioComponent.prototype.play = function (url) {
         var _this = this;
         this.audioElement.src = url;
         this.audioElement.load();
-        this.audioElement.play();
-        this.audioElement.addEventListener("ended", function () { return _this.onSongEnded.emit(); });
+        this.audioElement.addEventListener('loadeddata', function () {
+            _this.duration = _this.formatTime(_this.audioElement.duration);
+            _this.resume();
+        });
+    };
+    AudioComponent.prototype.resume = function () {
+        var _this = this;
+        if (this.audioElement.readyState >= 2) {
+            this.audioElement.play();
+            this.audioElement.addEventListener("ended", function () { return _this.onSongEnded.emit(); });
+            this.playPauseImage = PAUSE_IMAGE;
+            this.isPlaying = true;
+        }
     };
     AudioComponent.prototype.stop = function () {
         this.audioElement.pause();
+        this.playPauseImage = PLAY_IMAGE;
+        this.isPlaying = false;
+    };
+    AudioComponent.prototype.onPlayPause = function () {
+        if (this.isPlaying) {
+            this.stop();
+        }
+        else {
+            this.resume();
+        }
+    };
+    AudioComponent.prototype.onSeekBarClick = function (event) {
+        var newPosition = (event.offsetX / this.seekBarElement.offsetWidth);
+        this.seekMarkerPos = (newPosition * 100) + "%";
+        this.audioElement.currentTime = this.audioElement.duration * newPosition;
+    };
+    AudioComponent.prototype.timeUpdate = function () {
+        this.seekMarkerPos = (100 * (this.audioElement.currentTime / this.audioElement.duration)) + "%";
+        var currentSeconds = this.audioElement.currentTime;
+        if (!isNaN(currentSeconds)) {
+            this.currentTime = this.formatTime(currentSeconds);
+        }
+    };
+    AudioComponent.prototype.formatTime = function (seconds) {
+        var dateString = new Date(seconds * 1000).toISOString();
+        var offset = 4;
+        if (seconds >= 600 && seconds < 3600) {
+            offset = 3;
+        }
+        else if (seconds >= 3600) {
+            offset = 1;
+        }
+        return dateString.substr(11 + offset, 8 - offset);
     };
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Output */])(), 
@@ -129,7 +182,7 @@ var AudioComponent = (function () {
     return AudioComponent;
     var _a;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/audio.component.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/audio.component.js.map
 
 /***/ },
 
@@ -216,7 +269,7 @@ var PlaylistComponent = (function () {
     return PlaylistComponent;
     var _a, _b;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/playlist.component.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/playlist.component.js.map
 
 /***/ },
 
@@ -260,7 +313,7 @@ var FolderService = (function () {
     return FolderService;
     var _a, _b;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/folder.service.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/folder.service.js.map
 
 /***/ },
 
@@ -272,7 +325,7 @@ var FolderService = (function () {
 var environment = {
     production: true
 };
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/environment.prod.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/environment.prod.js.map
 
 /***/ },
 
@@ -309,7 +362,7 @@ if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment *
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_core__["_24" /* enableProdMode */])();
 }
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_4__app___["a" /* AppModule */]);
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/main.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/main.js.map
 
 /***/ },
 
@@ -370,7 +423,7 @@ var AppModule = (function () {
     ], AppModule);
     return AppModule;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/app.module.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/app.module.js.map
 
 /***/ },
 
@@ -456,7 +509,7 @@ var FolderBrowserComponent = (function () {
     return FolderBrowserComponent;
     var _a;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/folder.browser.component.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/folder.browser.component.js.map
 
 /***/ },
 
@@ -470,7 +523,7 @@ var FolderBrowserComponent = (function () {
 /* harmony namespace reexport (by used) */ __webpack_require__.d(exports, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__app_module__["a"]; });
 
 
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/index.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/index.js.map
 
 /***/ },
 
@@ -486,7 +539,7 @@ var FolderList = (function () {
     }
     return FolderList;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/folder.list.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/folder.list.js.map
 
 /***/ },
 
@@ -503,7 +556,7 @@ var Song = (function () {
     ;
     return Song;
 }());
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/song.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/song.js.map
 
 /***/ },
 
@@ -559,14 +612,14 @@ var Song = (function () {
 
 
 
-//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStreamClient/src/polyfills.js.map
+//# sourceMappingURL=C:/Users/louis/IdeaProjects/MusicStream/src-ui/src/polyfills.js.map
 
 /***/ },
 
 /***/ 649:
 /***/ function(module, exports) {
 
-module.exports = "<audio id=\"audioPlayer\" controls preload=\"none\">\r\n    <source id=\"audiosource\" type=\"audio/mpeg\">\r\n    Your browser does not support the audio element.\r\n</audio>"
+module.exports = "<audio id=\"audio-player\" preload=\"none\">\r\n    <source id=\"audiosource\" type=\"audio/mpeg\">\r\n    Your browser does not support the audio element.\r\n</audio>\r\n<button class=\"play-button\" (click)=\"onPlayPause()\"><img [src]=\"playPauseImage\" alt=\"play/pause\" width=\"20\" height=\"20\"></button>\r\n{{currentTime}}/{{duration}}\r\n<div id=\"seek-bar\" class=\"seek-bar\" (click)=\"onSeekBarClick($event)\">\r\n\t <div [style.marginLeft]=\"seekMarkerPos\" id=\"seek-marker\" class=\"seek-marker\"></div>\r\n</div>\r\n"
 
 /***/ },
 
@@ -580,7 +633,7 @@ module.exports = "<h3>\r\n    Folders\r\n    <span class=\"file-link\" *ngIf=\"g
 /***/ 651:
 /***/ function(module, exports) {
 
-module.exports = "<div class=\"panel\">\r\n    <audioPlayer (onSongEnded)=\"onSongEnded($event)\"></audioPlayer>\r\n    <button (click)=\"previous()\"><img src=\"assets/svg/previous.svg\" width=\"20\" height=\"20\"></button><!--{{action 'prev'}}-->\r\n    <button (click)=\"nextSong()\"><img src=\"assets/svg/next.svg\" width=\"20\" height=\"20\"></button> <!--{{action 'next'}}-->\r\n    <h3>\r\n        Playlist\r\n        <button (click)=\"toggleExpanded()\"><img src=\"assets/svg/collapse.svg\" width=\"20\" height=\"20\"></button>\r\n        <button (click)=\"clear()\"><img src=\"assets/svg/remove-symbol.svg\" width=\"20\" height=\"20\"></button>\r\n    </h3>\r\n\r\n    <div id=\"playlist-container\" class=\"playlist-expanded\" *ngIf=\"expanded\">\r\n        <div class=\"playlist-item\" *ngFor=\"let song of songs; let i = index\">\r\n            <span *ngIf=\"i == currentIndex\">* </span>{{(i+1) + \" - \" + song.name}}\r\n            <div class=\"button-bar\">\r\n                <button (click)=\"onPlaySong(i)\"><img src=\"assets/svg/play.svg\" width=\"20\" height=\"20\"></button>\r\n                <button (click)=\"onRemoveSong(i)\"><img src=\"assets/svg/remove-symbol.svg\" width=\"20\" height=\"20\"></button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n</div>"
+module.exports = "<div class=\"panel\">\r\n    <div style=\"height: 30px; margin-bottom: 10px\">\r\n        <audioPlayer (onSongEnded)=\"onSongEnded($event)\"></audioPlayer>\r\n        <div style=\"float: right\">\r\n            <button (click)=\"previous()\"><img src=\"assets/svg/previous.svg\" width=\"20\" height=\"20\"></button><!--{{action 'prev'}}-->\r\n            <button (click)=\"nextSong()\"><img src=\"assets/svg/next.svg\" width=\"20\" height=\"20\"></button> <!--{{action 'next'}}-->\r\n        </div>\r\n    </div>\r\n    <h3>\r\n        Playlist\r\n        <button (click)=\"toggleExpanded()\"><img src=\"assets/svg/collapse.svg\" width=\"20\" height=\"20\"></button>\r\n        <button (click)=\"clear()\"><img src=\"assets/svg/remove-symbol.svg\" width=\"20\" height=\"20\"></button>\r\n    </h3>\r\n\r\n    <div id=\"playlist-container\" class=\"playlist-expanded\" *ngIf=\"expanded\">\r\n        <div class=\"playlist-item\" *ngFor=\"let song of songs; let i = index\">\r\n            <span *ngIf=\"i == currentIndex\">* </span>{{(i+1) + \" - \" + song.name}}\r\n            <div class=\"button-bar\">\r\n                <button (click)=\"onPlaySong(i)\"><img src=\"assets/svg/play.svg\" width=\"20\" height=\"20\"></button>\r\n                <button (click)=\"onRemoveSong(i)\"><img src=\"assets/svg/remove-symbol.svg\" width=\"20\" height=\"20\"></button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n</div>\r\n"
 
 /***/ },
 

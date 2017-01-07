@@ -9,7 +9,7 @@ export class AppConfig {
         if (environment.production === true) {
             return "";
         } else {
-            return "http://louis-pc:8080/musicstream/";
+            return "http://localhost:8080/";
         }
     }
 };

@@ -1,4 +1,4 @@
-import {Component, ViewChild, Inject} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Song} from "./model/song";
 import {AudioComponent} from "./audio.component";
 import { AppConfig } from './app.config';
@@ -13,8 +13,7 @@ export class PlaylistComponent {
     private songs: Array<Song> = [];
     private expanded: boolean = true;
     private currentIndex: number = 0;
-    @ViewChild(AudioComponent)
-    private audio: AudioComponent;
+    @Input() private audio: AudioComponent;
 
     constructor (private appConfig: AppConfig) {}
 
@@ -46,7 +45,7 @@ export class PlaylistComponent {
         this.playCurrentSong();
     }
 
-    public previous(): void {
+    public previousSong(): void {
         this.currentIndex = (this.currentIndex==0) ? (this.songs.length-1) : ((this.currentIndex - 1) % this.songs.length);
         this.playCurrentSong();
     }
@@ -62,8 +61,12 @@ export class PlaylistComponent {
     }
 
     private playCurrentSong(): void {
-        const currentSong: Song = this.songs[this.currentIndex];
-        const url = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.name;
-        this.audio.play(url);
+        if (this.songs.length > 0) {
+            const currentSong: Song = this.songs[this.currentIndex];
+            const nextSong: Song = this.songs[(this.currentIndex + 1) % this.songs.length];
+            const url: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.name;
+            const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.name;
+            this.audio.play(url, nextUrl);
+        }
     }
 }

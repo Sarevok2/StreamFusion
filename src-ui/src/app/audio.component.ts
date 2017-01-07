@@ -1,4 +1,5 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
+import {PlaylistComponent} from "./playlist.component";
 
 const PLAY_IMAGE: string = "assets/svg/play.svg";
 const PAUSE_IMAGE: string = "assets/svg/pause.svg";
@@ -8,35 +9,52 @@ const PAUSE_IMAGE: string = "assets/svg/pause.svg";
     templateUrl: "./audio.component.html"
 })
 export class AudioComponent implements OnInit {
-    @Output() onSongEnded: EventEmitter<void> = new EventEmitter<void>();
-    private audioElement: any;
-    private seekBarElement: any;
+    private audioElement: HTMLAudioElement;
+    private audioElement2: HTMLAudioElement;
+    private seekBarElement: HTMLDivElement;
     private isPlaying: boolean = false;
     private playPauseImage: string = PLAY_IMAGE;
     private currentTime: string = "0.00";
     private duration: string = "0.00";
     private seekMarkerPos: string;
+    private nextUrl: string;
+    private preLoaded: boolean = false;
+    @Input() private playlist: PlaylistComponent;
 
     ngOnInit() {
-        this.audioElement = document.getElementById("audio-player");
-        this.seekBarElement = document.getElementById("seek-bar");
+        this.seekBarElement = <HTMLDivElement>document.getElementById("seek-bar");
 
-        this.audioElement.addEventListener("timeupdate", () => this.timeUpdate(), false);
+        this.audioElement = new Audio();
+        this.audioElement2 = new Audio();
+
+        this.audioElement.addEventListener("timeupdate", this.timeUpdate.bind(this));
+        this.audioElement.addEventListener("ended", this.playlist.nextSong.bind(this.playlist));
+        this.audioElement.addEventListener('loadeddata', this.onLoadedData.bind(this));
+        this.audioElement2.addEventListener("timeupdate", this.timeUpdate.bind(this));
+        this.audioElement2.addEventListener("ended", this.playlist.nextSong.bind(this.playlist));
+        this.audioElement2.addEventListener('loadeddata', this.onLoadedData.bind(this));
     }
 
-    public play(url: string): void {
-        this.audioElement.src = url;
-        this.audioElement.load();
-        this.audioElement.addEventListener('loadeddata', () => {
-          this.duration = this.formatTime(this.audioElement.duration);
-          this.resume();
-        });
+    public play(url: string, nextUrl?: string): void {
+        this.isPlaying = false;
+        if (this.preLoaded && url == this.nextUrl) {
+            this.audioElement.pause();
+            let tempAudio: HTMLAudioElement = this.audioElement;
+            this.audioElement = this.audioElement2;
+            this.audioElement2 = tempAudio;
+            this.startNewSong();
+            //TODO: may still be in the process of loading
+        } else {
+            this.audioElement.src = url;
+            this.audioElement.load();
+        }
+        this.nextUrl = nextUrl;
+        this.preLoaded = false;
     }
 
     public resume(): void {
       if (this.audioElement.readyState >= 2) {
         this.audioElement.play();
-        this.audioElement.addEventListener("ended", () => this.onSongEnded.emit());
         this.playPauseImage = PAUSE_IMAGE;
         this.isPlaying = true;
       }
@@ -56,18 +74,47 @@ export class AudioComponent implements OnInit {
         }
     }
 
-    public onSeekBarClick(event: MouseEvent) {
+    private startNewSong(): void {
+        if (!isNaN(this.audioElement.duration)) {
+            this.duration = this.formatTime(this.audioElement.duration);
+        }
+        this.resume();
+
+    }
+
+    private onLoadedData(): void {
+        if (!this.isPlaying) {
+            this.startNewSong();
+        }
+    }
+
+    private onPreviousSong(): void {
+        this.playlist.previousSong();
+    }
+
+    private onNextSong(): void {
+        this.playlist.nextSong();
+    }
+
+    private onSeekBarClick(event: MouseEvent) {
         let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
         this.seekMarkerPos = (newPosition*100) + "%";
         this.audioElement.currentTime = this.audioElement.duration * newPosition;
     }
 
     private timeUpdate(): void {
-      this.seekMarkerPos = (100 * (this.audioElement.currentTime / this.audioElement.duration)) + "%";
-      let currentSeconds: any = this.audioElement.currentTime;
-      if (!isNaN(currentSeconds)) {
-        this.currentTime = this.formatTime(currentSeconds);
-      }
+        let percentComplete: number = (100 * (this.audioElement.currentTime / this.audioElement.duration));
+        this.seekMarkerPos = percentComplete + "%";
+
+        if (!isNaN(this.audioElement.currentTime)) {
+            this.currentTime = this.formatTime(this.audioElement.currentTime);
+        }
+
+        if (!this.preLoaded && percentComplete > 95 && this.nextUrl && this.nextUrl.length > 0) {
+            this.audioElement2.src = this.nextUrl;
+            this.audioElement2.load();
+            this.preLoaded = true;
+        }
     }
 
     private formatTime(seconds: number): string {
