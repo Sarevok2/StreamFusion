@@ -83,6 +83,7 @@ export class AudioComponent implements OnInit {
     }
 
     private onLoadedData(): void {
+        console.log("loaded");
         if (!this.isPlaying) {
             this.startNewSong();
         }
@@ -96,13 +97,14 @@ export class AudioComponent implements OnInit {
         this.playlist.nextSong();
     }
 
-    private onSeekBarClick(event: MouseEvent) {
+    private onSeekBarClick(event: MouseEvent): void {
         let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
         this.seekMarkerPos = (newPosition*100) + "%";
         this.audioElement.currentTime = this.audioElement.duration * newPosition;
     }
 
     private timeUpdate(): void {
+        // console.log(this.audioElement.buffered);
         let percentComplete: number = (100 * (this.audioElement.currentTime / this.audioElement.duration));
         this.seekMarkerPos = percentComplete + "%";
 
@@ -114,6 +116,13 @@ export class AudioComponent implements OnInit {
             this.audioElement2.src = this.nextUrl;
             this.audioElement2.load();
             this.preLoaded = true;
+        }
+    }
+
+    private drawTimeRanges(): void {
+        let timeRanges: any = this.audioElement.buffered;
+        for (let timeRange of timeRanges) {
+
         }
     }
 

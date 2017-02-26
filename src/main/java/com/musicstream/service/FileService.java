@@ -8,10 +8,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.nio.file.NoSuchFileException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 
 @Service
@@ -20,7 +26,7 @@ public class FileService {
 	private static String rootMusicDirectory = "file:D:/Music";
 	public static char DIRECTORY_SEPARATOR = '/';
 	public static char CLIENT_DIRECTORY_SEPARATOR = '$';
-	private static final int DEFAULT_BUFFER_SIZE = 1024;
+	private static final int BUFFER_SIZE = 1000;
 
 	@Autowired
 	private ResourceLoader resourceLoader;
@@ -70,41 +76,33 @@ public class FileService {
 		}
 	}
 
-	public void streamFileToOutput(File inputFile, OutputStream output, long start, long end) throws Exception {
-		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-		int read;
-		RandomAccessFile input = new RandomAccessFile(inputFile, "r");
-		input.seek(start);
-		try {
-			while ((read = input.read(buffer)) > 0) {
-				output.write(buffer, 0, read);
-			}
-		} finally {
-			input.close();
-		}
-		/*if (input.length() == length) {
-			logger.debug("full");
-			while ((read = input.read(buffer)) > 0) {
-				output.write(buffer, 0, read);
-			}
-		} else {
-			logger.debug("partial, start: " + start + " end: " + end + " length: " + length);
-			input.seek(start);
-			long toRead = length;
+	public void streamFileToOutput(File inputFile, OutputStream output, long start, long length) throws IOException {
+		logger.debug("Length: " + length);
+		try (FileChannel fileChannel = (FileChannel) Files.newByteChannel(inputFile.toPath(), StandardOpenOption.READ)) {
+			WritableByteChannel outputChannel = Channels.newChannel(output);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+			long size = 0;
 
-			while ((read = input.read(buffer)) > 0) {
-				if ((toRead -= read) > 0) {
-					output.write(buffer, 0, read);
-				} else {
-					output.write(buffer, 0, (int) toRead + read);
+			while (fileChannel.read(buffer, start + size) != -1) {
+				buffer.flip();
+
+				if (size + buffer.limit() > length) {
+					buffer.limit((int) (length - size));
+				}
+				logger.debug("Starting write: " + size + ", " + length);
+				size += outputChannel.write(buffer);
+				logger.debug("Done write: " + size + ", " + length);
+				if (size >= length) {
 					break;
 				}
+
+				buffer.clear();
 			}
-		}*/
+		}
 	}
 
-	public void streamMultipleFileToOutput(File[] inputFiles, OutputStream output, long start, long end) throws Exception {
-		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+	/*public void streamMultipleFileToOutput(File[] inputFiles, OutputStream output, long start, long end) throws Exception {
+		byte[] buffer = new byte[BUFFER_SIZE];
 		int read, currentFileIndex = 0;
 		long lengthCounter = 0, startPosition = -1;
 		List<RandomAccessFile> input = new ArrayList<>();
@@ -134,5 +132,5 @@ public class FileService {
 		} finally {
 			input.get(currentFileIndex).close();
 		}
-	}
+	}*/
 }

@@ -25,5 +25,4 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
     </context-param>
-
 </web-app>
