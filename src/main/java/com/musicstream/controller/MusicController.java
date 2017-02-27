@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -23,7 +24,6 @@ import java.io.IOException;
 public class MusicController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MusicController.class);
-	private static final String musicDir = "D:\\Music";
 	private static final long DEFAULT_EXPIRE_TIME = 604800000L; //1 week.
 
 	@Autowired
@@ -42,47 +42,32 @@ public class MusicController {
 	@ResponseBody
 	void playtrack(@RequestParam("fullpath") String fullpath, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("get " + fullpath);
-		try {
-			String path = musicDir + fullpath.replace('$', '.');
-			response.setContentType("audio/mpeg");
-			response.setHeader("Accept-Ranges", "bytes");
-			response.setHeader("Connection", "keep-alive");
-
-			File songFile = new File(path);
-			long songFileLength = songFile.length();
-
+		try (ServletOutputStream out = response.getOutputStream()){
 			String range = request.getHeader("Range");
 			if (range == null || !range.matches("^bytes=\\d*-\\d*")) {// range is invalid
-				response.setHeader("Content-Range", "bytes */" + songFileLength);
 				response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
 				return;
 			}
+
+			String path = fullpath.replace('$', '.');
+			File songFile = fileService.loadFile(path);
+			long songFileLength = songFile.length();
 			range = range.substring(6);
 			String[] splitRange = range.split("-");
 			long rangeStart = Long.valueOf(splitRange[0]);
 			long rangeEnd = (splitRange.length > 1) ? Long.valueOf(splitRange[1]) : (songFileLength - 1);
 			long rangeLength = rangeEnd - rangeStart + 1;
 
-			String eTag = songFileLength + "_" + songFile.lastModified();
-			response.setHeader("ETag", eTag);
-			response.setDateHeader("Last-Modified", songFile.lastModified());
-			response.setHeader("Content-Range", "bytes " + rangeStart + "-" + rangeEnd + "/" + songFileLength);
-			response.setHeader("Content-Length", String.valueOf(rangeLength));
-			response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+			setResponseHeaders(response, songFileLength, songFile.lastModified(), rangeStart, rangeEnd, rangeLength);
 
-			fileService.streamFileToOutput(songFile, response.getOutputStream(), rangeStart, rangeLength);
+			fileService.streamFileToOutput(out, rangeStart, rangeLength);
 		} catch (java.nio.file.NoSuchFileException e) {
-			logger.debug("Client probably aborted " + e.getClass() + " " + e.getMessage());
+			logger.debug("No such file exception " + e.getClass() + " " + e.getMessage());
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		} catch (Exception e) {
 			logger.debug("exception " + e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-		} finally {
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-			}
 		}
 	}
 
@@ -92,5 +77,18 @@ public class MusicController {
 	@ResponseBody
 	FolderListing directoryList(@RequestParam("directory") String directory) throws java.io.UnsupportedEncodingException {
 		return fileService.getFolderListing(directory);
+	}
+
+	private void setResponseHeaders(HttpServletResponse response, long songFileLength, long lastModified, long rangeStart, long rangeEnd, long rangeLength) {
+		response.setContentType("audio/mpeg");
+		response.setHeader("Accept-Ranges", "bytes");
+		response.setHeader("Connection", "keep-alive");
+
+		String eTag = songFileLength + "_" + lastModified;
+		response.setHeader("ETag", eTag);
+		response.setDateHeader("Last-Modified", lastModified);
+		response.setHeader("Content-Range", "bytes " + rangeStart + "-" + rangeEnd + "/" + songFileLength);
+		response.setHeader("Content-Length", String.valueOf(rangeLength));
+		response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 	}
 }
