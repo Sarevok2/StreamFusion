@@ -3,5 +3,7 @@
 /.idea
 /lib
 /out
-/src/main/webapp/resources
+/src/main/webapp/resources/assets
+/src/main/webapp/resources/*.bundle.js
+/src/main/webapp/resources/*.bundle.map
 npm-debug.log
