@@ -1,10 +1,7 @@
 /build
-/gradle
 /.gradle
 /.idea
 /lib
 /out
 /src/main/webapp/resources
-gradlew
-gradlew.bat
 npm-debug.log
