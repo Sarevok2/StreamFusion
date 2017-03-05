@@ -64,8 +64,8 @@ export class PlaylistComponent {
         if (this.songs.length > 0) {
             const currentSong: Song = this.songs[this.currentIndex];
             const nextSong: Song = this.songs[(this.currentIndex + 1) % this.songs.length];
-            const url: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.name;
-            const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.name;
+            const url: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.fileName;
+            const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.fileName;
             this.audio.play(url, nextUrl);
         }
     }

@@ -7,28 +7,28 @@ import java.util.List;
 public class FolderListing {
 	private String baseDir;
 	private List<String> folders;
-	private List<String> files;
+	private List<Song> songs;
 
 	public FolderListing() {
 		baseDir = "";
 		folders = new ArrayList<String>();
-		files = new ArrayList<String>();
+		songs = new ArrayList<Song>();
 	}
 
 	public List<String> getFolders() {
 		return folders;
 	}
 
-	public List<String> getFiles() {
-		return files;
+	public List<Song> getSongs() {
+		return songs;
 	}
 
 	public void addFolder(String folder) {
 		folders.add(folder);
 	}
 
-	public void addFile(String file) {
-		files.add(file);
+	public void addFile(Song file) {
+		songs.add(file);
 	}
 
 	public String getBaseDir() {
@@ -39,3 +39,4 @@ public class FolderListing {
 		this.baseDir = baseDir;
 	}
 }
+

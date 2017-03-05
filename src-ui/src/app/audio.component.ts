@@ -83,7 +83,6 @@ export class AudioComponent implements OnInit {
     }
 
     private onLoadedData(): void {
-        console.log("loaded");
         if (!this.isPlaying) {
             this.startNewSong();
         }
@@ -104,7 +103,6 @@ export class AudioComponent implements OnInit {
     }
 
     private timeUpdate(): void {
-        // console.log(this.audioElement.buffered);
         let percentComplete: number = (100 * (this.audioElement.currentTime / this.audioElement.duration));
         this.seekMarkerPos = percentComplete + "%";
 

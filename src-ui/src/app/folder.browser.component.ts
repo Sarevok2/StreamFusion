@@ -35,19 +35,14 @@ export class FolderBrowserComponent implements OnInit {
         return this.currentDir != "";
     }
 
-    public onAddSong(songName: string, play: boolean) {
-        const song: Song = new Song(this.currentDir, songName);
+    public onAddSong(song: Song, play: boolean) {
         this.onAddSongs.emit({songs: [song], play: play});
     }
 
     public onAddDir(dir: string, play: boolean) {
         const subDir = this.currentDir + "/" + dir
         this.folderService.getFolderList(subDir).subscribe((folderList: FolderList) => {
-            let songList: Array<Song> = [];
-            for (let songName of folderList.files) {
-                songList.push(new Song(subDir, songName));
-            }
-            this.onAddSongs.emit({songs: songList, play: play});
+            this.onAddSongs.emit({songs: folderList.songs, play: play});
         });
     }
 

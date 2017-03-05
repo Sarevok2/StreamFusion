@@ -1,5 +1,6 @@
 package com.streamfusion.service;
 
+import com.streamfusion.model.Song;
 import com.streamfusion.model.FolderListing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -39,7 +44,6 @@ public class FileService {
 
 	public FolderListing getFolderListing(String path) {
 		FolderListing ret = new FolderListing();
-		logger.debug("FILE DIR: " + rootMusicDirectory);
 		Resource resource = resourceLoader.getResource("file:" + rootMusicDirectory + DIRECTORY_SEPARATOR + path);
 		File[] files;
 		try {
@@ -49,7 +53,32 @@ public class FileService {
 					if (file.isDirectory()) {
 						ret.addFolder(file.getName());
 					} else {
-						ret.addFile(file.getName());
+						try {
+							Song audioFile = new Song();
+							audioFile.setFileName(file.getName());
+							audioFile.setPath(path);
+
+							Mp3File mp3 = new Mp3File(file);
+							if (mp3.hasId3v2Tag()) {
+								ID3v2 id3v2 = mp3.getId3v2Tag();
+								audioFile.setArtist(id3v2.getArtist());
+								audioFile.setAlbum(id3v2.getAlbum());
+								audioFile.setTitle(id3v2.getTitle());
+								audioFile.setTrack(id3v2.getTrack());
+							} else if (mp3.hasId3v1Tag()) {
+								ID3v1 id3v1 = mp3.getId3v1Tag();
+								audioFile.setArtist(id3v1.getArtist());
+								audioFile.setAlbum(id3v1.getAlbum());
+								audioFile.setTitle(id3v1.getTitle());
+								audioFile.setTrack(id3v1.getTrack());
+							}
+							ret.addFile(audioFile);
+						} catch (UnsupportedTagException e) {
+							logger.error("Unsupported tag: " + file.getName() + ", " + e.getMessage());
+						} catch (InvalidDataException e) {
+							logger.error("Invalid Data: " + file.getName() + ", " + e.getMessage());
+						}
+
 					}
 				}
 			}

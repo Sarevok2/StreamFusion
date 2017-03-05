@@ -10,10 +10,10 @@
 </div>
 
 <h3>Songs</h3>
-<div class="list-item toolbar" *ngFor="let file of dirList.files">
-    <div class="toolbar-text">{{file}}</div>
+<div class="list-item toolbar" *ngFor="let song of dirList.songs">
+    <div class="toolbar-text">{{song.fileName}}</div>
 
-    <button class="toolbar__item" (click)="onAddSong(file, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
-    <button class="toolbar__item" (click)="onAddSong(file, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+    <button class="toolbar__item" (click)="onAddSong(song, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
+    <button class="toolbar__item" (click)="onAddSong(song, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
 
 </div>
