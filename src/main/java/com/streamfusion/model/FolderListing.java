@@ -1,4 +1,4 @@
-package com.musicstream.model;
+package com.streamfusion.model;
 
 
 import java.util.ArrayList;

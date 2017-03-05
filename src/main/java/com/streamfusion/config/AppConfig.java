@@ -1,4 +1,4 @@
-package com.musicstream.config;
+package com.streamfusion.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
