@@ -23,7 +23,6 @@ import java.io.File;
 public class MusicController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MusicController.class);
-	private static final long DEFAULT_EXPIRE_TIME = 604800000L; //1 week.
 
 	@Autowired
 	private FileService fileService;

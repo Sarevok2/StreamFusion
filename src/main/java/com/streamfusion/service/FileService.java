@@ -29,7 +29,6 @@ import java.nio.file.StandardOpenOption;
 public class FileService {
 	private static final Logger logger = LoggerFactory.getLogger(FileService.class);
 	public static char DIRECTORY_SEPARATOR = '/';
-	public static char CLIENT_DIRECTORY_SEPARATOR = '$';
 	private static final int BUFFER_SIZE = 16384;
 
 	@Autowired
@@ -114,39 +113,6 @@ public class FileService {
 			}
 		}
 	}
-
-	/*public void streamMultipleFileToOutput(File[] inputFiles, OutputStream output, long start, long end) throws Exception {
-		byte[] buffer = new byte[BUFFER_SIZE];
-		int read, currentFileIndex = 0;
-		long lengthCounter = 0, startPosition = -1;
-		List<RandomAccessFile> input = new ArrayList<>();
-		for (File file: inputFiles) {
-			if (lengthCounter + file.length() < start) {
-				currentFileIndex++;
-				lengthCounter += file.length();
-			} else {
-				input.add(new RandomAccessFile(file, "r"));
-				if (startPosition == -1) {
-					startPosition = start - lengthCounter;
-				}
-			}
-
-		}
-
-		input.get(currentFileIndex).seek(startPosition);
-		try {
-			while(currentFileIndex < input.size()) {
-				RandomAccessFile currentFile = input.get(currentFileIndex);
-				while ((read = currentFile.read(buffer)) > 0) {
-					output.write(buffer, 0, read);
-				}
-				currentFile.close();
-				currentFileIndex++;
-			}
-		} finally {
-			input.get(currentFileIndex).close();
-		}
-	}*/
 
 	private static class MusicFileFilter implements FileFilter {
 		private String[] extensions = {"mp3", "mp4", "m4a", "ogg"};
