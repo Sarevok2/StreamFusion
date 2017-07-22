@@ -1,17 +1,17 @@
 import {Component, Input} from '@angular/core';
-import {Song} from "./model/song";
+import {Song} from "../model/song";
 import {AudioComponent} from "./audio.component";
-import { AppConfig } from './app.config';
+import { AppConfig } from '../app.config';
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 
 @Component({
     selector: 'playlist',
-    templateUrl: "./playlist.component.html"
+    templateUrl: "playlist.component.html"
 })
 export class PlaylistComponent {
+    public expanded: boolean = true;
     private songs: Array<Song> = [];
-    private expanded: boolean = true;
     private currentIndex: number = 0;
     @Input() private audio: AudioComponent;
 

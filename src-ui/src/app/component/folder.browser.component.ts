@@ -1,11 +1,11 @@
-import { FolderList } from './model/folder.list';
+import { FolderList } from '../model/folder.list';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FolderService } from './service/folder.service';
-import { Song } from "./model/song";
+import { FolderService } from '../service/folder.service';
+import { Song } from "../model/song";
 
 @Component({
     selector: 'folder-browser',
-    templateUrl: './folder.browser.component.html'
+    templateUrl: 'folder.browser.component.html'
 })
 export class FolderBrowserComponent implements OnInit {
     private currentDir: string = "";
@@ -14,7 +14,7 @@ export class FolderBrowserComponent implements OnInit {
 
     public constructor(private folderService: FolderService){}
 
-    ngOnInit() {
+    ngOnInit(): void {
        this.updateList();
     }
 
@@ -35,11 +35,11 @@ export class FolderBrowserComponent implements OnInit {
         return this.currentDir != "";
     }
 
-    public onAddSong(song: Song, play: boolean) {
+    public onAddSong(song: Song, play: boolean): void {
         this.onAddSongs.emit({songs: [song], play: play});
     }
 
-    public onAddDir(dir: string, play: boolean) {
+    public onAddDir(dir: string, play: boolean): void {
         const subDir = this.currentDir + "/" + dir
         this.folderService.getFolderList(subDir).subscribe((folderList: FolderList) => {
             this.onAddSongs.emit({songs: folderList.songs, play: play});

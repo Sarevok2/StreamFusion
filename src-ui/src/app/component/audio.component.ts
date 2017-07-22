@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {PlaylistComponent} from "./playlist.component";
 
 const PLAY_IMAGE: string = "assets/svg/play.svg";
@@ -6,17 +6,18 @@ const PAUSE_IMAGE: string = "assets/svg/pause.svg";
 
 @Component({
     selector: 'audioPlayer',
-    templateUrl: "./audio.component.html"
+    templateUrl: "audio.component.html"
 })
 export class AudioComponent implements OnInit {
+    public currentTime: string = "0.00";
+    public duration: string = "0.00";
+    public seekMarkerPos: string;
+    public playPauseImage: string = PLAY_IMAGE;
+
     private audioElement: HTMLAudioElement;
     private audioElement2: HTMLAudioElement;
     private seekBarElement: HTMLDivElement;
     private isPlaying: boolean = false;
-    private playPauseImage: string = PLAY_IMAGE;
-    private currentTime: string = "0.00";
-    private duration: string = "0.00";
-    private seekMarkerPos: string;
     private nextUrl: string;
     private preLoaded: boolean = false;
     @Input() private playlist: PlaylistComponent;
@@ -74,6 +75,20 @@ export class AudioComponent implements OnInit {
         }
     }
 
+    public onPreviousSong(): void {
+        this.playlist.previousSong();
+    }
+
+    public onNextSong(): void {
+        this.playlist.nextSong();
+    }
+
+    public onSeekBarClick(event: MouseEvent): void {
+        let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
+        this.seekMarkerPos = (newPosition*100) + "%";
+        this.audioElement.currentTime = this.audioElement.duration * newPosition;
+    }
+
     private startNewSong(): void {
         if (!isNaN(this.audioElement.duration)) {
             this.duration = this.formatTime(this.audioElement.duration);
@@ -86,20 +101,6 @@ export class AudioComponent implements OnInit {
         if (!this.isPlaying) {
             this.startNewSong();
         }
-    }
-
-    private onPreviousSong(): void {
-        this.playlist.previousSong();
-    }
-
-    private onNextSong(): void {
-        this.playlist.nextSong();
-    }
-
-    private onSeekBarClick(event: MouseEvent): void {
-        let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
-        this.seekMarkerPos = (newPosition*100) + "%";
-        this.audioElement.currentTime = this.audioElement.duration * newPosition;
     }
 
     private timeUpdate(): void {

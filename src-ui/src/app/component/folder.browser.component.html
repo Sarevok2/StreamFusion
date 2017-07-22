@@ -1,6 +1,7 @@
 <h3>
     Folders
     <span class="file-link" *ngIf="goUpVisible()" (click)="goUp()"><img src="assets/svg/upload.svg" width="20" height="20"></span>
+    <a routerLink="/settings" routerLinkActive="active">Settings</a>
 </h3>
 
 <div class="list-item toolbar" *ngFor="let folder of dirList.folders">

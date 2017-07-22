@@ -82,3 +82,11 @@ button {
 	margin-top: 1px;
 	background: rgba(0, 255, 196, 0.82);
 }
+
+.settings-button-bar {
+    padding-top: 10px;
+}
+
+.settings-button-bar__button {
+    width: 70px;
+}
