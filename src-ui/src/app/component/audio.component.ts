@@ -20,6 +20,7 @@ export class AudioComponent implements OnInit {
     private isPlaying: boolean = false;
     private nextUrl: string;
     private preLoaded: boolean = false;
+    private wind: any = window;
     @Input() private playlist: PlaylistComponent;
 
     ngOnInit() {
@@ -54,17 +55,31 @@ export class AudioComponent implements OnInit {
     }
 
     public resume(): void {
-      if (this.audioElement.readyState >= 2) {
-        this.audioElement.play();
-        this.playPauseImage = PAUSE_IMAGE;
-        this.isPlaying = true;
-      }
+        if (this.audioElement.readyState >= 2) {
+            this.audioElement.play();
+            this.playPauseImage = PAUSE_IMAGE;
+            if (!this.isPlaying && !!window["cordova"]) {
+                this.wind.powerManagement.dim(function () {
+                    console.log('Wakelock acquired');
+                }, function () {
+                    console.log('Failed to acquire wakelock');
+                });
+            }
+            this.isPlaying = true
+        }
     }
 
     public stop(): void {
         this.audioElement.pause();
         this.playPauseImage = PLAY_IMAGE;
         this.isPlaying = false;
+        if (!!window["cordova"]) {
+            this.wind.powerManagement.release(function () {
+                console.log('Wakelock released');
+            }, function () {
+                console.log('Failed to release wakelock');
+            });
+        }
     }
 
     public onPlayPause(): void {

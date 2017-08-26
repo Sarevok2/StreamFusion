@@ -23,5 +23,6 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="android" spec="^6.2.3" />
+    <plugin name="at.gofg.sportscomputer.powermanagement" spec="https://github.com/boltex/cordova-plugin-powermanagement.git" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
 </widget>
