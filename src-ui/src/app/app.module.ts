@@ -11,6 +11,7 @@ import { AppComponent } from './component/app.component';
 import { HomeComponent } from './component/home.component';
 import {SettingsComponent} from "./component/settings.component";
 import {Routes, RouterModule} from "@angular/router";
+import {AudioService} from "./service/audio.service";
 
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
   ],
   providers: [
     FolderService,
+    AudioService,
     AppConfig
   ],
   bootstrap: [AppComponent]

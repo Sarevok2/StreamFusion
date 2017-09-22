@@ -1,5 +1,5 @@
 <div class="main-panel">
-    <audioPlayer [playlist]="playlist"></audioPlayer>
-    <playlist [audio]="audio" class="sub-panel"></playlist>
+    <audioPlayer (previousSong)="onPreviousSong()" (nextSong)="onNextSong()"></audioPlayer>
+    <playlist class="sub-panel"></playlist>
     <folder-browser class="sub-panel" (onAddSongs)="onAddSongs($event)"></folder-browser>
 </div>

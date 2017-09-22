@@ -1,5 +1,8 @@
 <div class="toolbar audio-comp">
-  <button class="toolbar__item" (click)="onPlayPause()"><img [src]="playPauseImage" alt="play/pause" width="20" height="20"></button>
+  <button class="toolbar__item" (click)="onPlayPause()">
+      <img [hidden]="isPlaying()" src="assets/svg/play.svg" alt="play" width="20" height="20">
+      <img [hidden]="!isPlaying()" src="assets/svg/pause.svg" alt="pause" width="20" height="20">
+  </button>
   <button class="toolbar__item" (click)="onPreviousSong()"><img src="assets/svg/previous.svg" width="20" height="20"></button>
   <button (click)="onNextSong()"><img src="assets/svg/next.svg" width="20" height="20"></button>
   <div class="toolbar__item">{{currentTime}}/{{duration}}</div>

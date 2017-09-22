@@ -16,4 +16,12 @@ export class HomeComponent {
     public onAddSongs(params: any): void {
         this.playlist.addSongs(params);
     }
+
+    public onPreviousSong(): void {
+        this.playlist.previousSong();
+    }
+
+    public onNextSong(): void {
+        this.playlist.nextSong();
+    }
 }

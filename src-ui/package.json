@@ -29,6 +29,7 @@
     "codelyzer": "~3.1.2",
     "ts-node": "3.2.1",
     "tslint": "^5.5.0",
-    "typescript": "~2.4.2"
+    "typescript": "~2.4.2",
+    "@types/cordova-plugin-media": "0.0.3"
   }
 }

@@ -1,8 +1,5 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {PlaylistComponent} from "./playlist.component";
-
-const PLAY_IMAGE: string = "assets/svg/play.svg";
-const PAUSE_IMAGE: string = "assets/svg/pause.svg";
+import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
+import {AudioService} from "../service/audio.service";
 
 @Component({
     selector: 'audioPlayer',
@@ -12,133 +9,80 @@ export class AudioComponent implements OnInit {
     public currentTime: string = "0.00";
     public duration: string = "0.00";
     public seekMarkerPos: string;
-    public playPauseImage: string = PLAY_IMAGE;
 
-    private audioElement: HTMLAudioElement;
-    private audioElement2: HTMLAudioElement;
+    @Output() public previousSong: EventEmitter<void> = new EventEmitter();
+    @Output() public nextSong: EventEmitter<void> = new EventEmitter();
+
     private seekBarElement: HTMLDivElement;
-    private isPlaying: boolean = false;
-    private nextUrl: string;
-    private preLoaded: boolean = false;
-    private wind: any = window;
-    @Input() private playlist: PlaylistComponent;
 
-    ngOnInit() {
+    constructor(@Inject(AudioService) private audioService: AudioService) {}
+
+    ngOnInit(): void {
         this.seekBarElement = <HTMLDivElement>document.getElementById("seek-bar");
-
-        this.audioElement = new Audio();
-        this.audioElement2 = new Audio();
-
-        this.audioElement.addEventListener("timeupdate", this.timeUpdate.bind(this));
-        this.audioElement.addEventListener("ended", this.playlist.nextSong.bind(this.playlist));
-        this.audioElement.addEventListener('loadeddata', this.onLoadedData.bind(this));
-        this.audioElement2.addEventListener("timeupdate", this.timeUpdate.bind(this));
-        this.audioElement2.addEventListener("ended", this.playlist.nextSong.bind(this.playlist));
-        this.audioElement2.addEventListener('loadeddata', this.onLoadedData.bind(this));
+        this.audioService.timeUpdateSubject.subscribe({
+            next: (currentTime: number) => this.onTimeUpdate(currentTime)
+        });
+        this.audioService.songChangedSubject.subscribe({
+            next: (v) => this.onSongChanged()
+        });
     }
 
-    public play(url: string, nextUrl?: string): void {
-        this.isPlaying = false;
-        if (this.preLoaded && url == this.nextUrl) {
-            this.audioElement.pause();
-            let tempAudio: HTMLAudioElement = this.audioElement;
-            this.audioElement = this.audioElement2;
-            this.audioElement2 = tempAudio;
-            this.startNewSong();
-            //TODO: may still be in the process of loading
-        } else {
-            this.audioElement.src = url;
-            this.audioElement.load();
-        }
-        this.nextUrl = nextUrl;
-        this.preLoaded = false;
+    public isPlaying(): boolean {
+        return this.audioService.isPlaying;
     }
 
     public resume(): void {
-        if (this.audioElement.readyState >= 2) {
-            this.audioElement.play();
-            this.playPauseImage = PAUSE_IMAGE;
-            if (!this.isPlaying && !!window["cordova"]) {
-                this.wind.powerManagement.dim(function () {
-                    console.log('Wakelock acquired');
-                }, function () {
-                    console.log('Failed to acquire wakelock');
-                });
-            }
-            this.isPlaying = true
-        }
+        this.audioService.resume();
     }
 
     public stop(): void {
-        this.audioElement.pause();
-        this.playPauseImage = PLAY_IMAGE;
-        this.isPlaying = false;
-        if (!!window["cordova"]) {
-            this.wind.powerManagement.release(function () {
-                console.log('Wakelock released');
-            }, function () {
-                console.log('Failed to release wakelock');
-            });
-        }
+        this.audioService.stop();
     }
 
     public onPlayPause(): void {
-        if (this.isPlaying) {
-          this.stop();
+        if (this.audioService.isPlaying) {
+            this.stop();
         } else {
-          this.resume();
+            this.resume();
         }
     }
 
     public onPreviousSong(): void {
-        this.playlist.previousSong();
+        this.previousSong.emit();
     }
 
     public onNextSong(): void {
-        this.playlist.nextSong();
+        this.nextSong.emit();
     }
 
     public onSeekBarClick(event: MouseEvent): void {
         let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
         this.seekMarkerPos = (newPosition*100) + "%";
-        this.audioElement.currentTime = this.audioElement.duration * newPosition;
+        this.audioService.setPosition(newPosition);
     }
 
-    private startNewSong(): void {
-        if (!isNaN(this.audioElement.duration)) {
-            this.duration = this.formatTime(this.audioElement.duration);
-        }
-        this.resume();
-
-    }
-
-    private onLoadedData(): void {
-        if (!this.isPlaying) {
-            this.startNewSong();
+    private onSongChanged(): void {
+        let duration: number = this.audioService.getDuration();
+        if (!isNaN(duration)) {
+            this.duration = this.formatTime(this.audioService.getDuration());
         }
     }
 
-    private timeUpdate(): void {
-        let percentComplete: number = (100 * (this.audioElement.currentTime / this.audioElement.duration));
+    private onTimeUpdate(currentTime: number): void {
+        let percentComplete: number = currentTime / this.audioService.getDuration() * 100;
         this.seekMarkerPos = percentComplete + "%";
 
-        if (!isNaN(this.audioElement.currentTime)) {
-            this.currentTime = this.formatTime(this.audioElement.currentTime);
-        }
-
-        if (!this.preLoaded && percentComplete > 95 && this.nextUrl && this.nextUrl.length > 0) {
-            this.audioElement2.src = this.nextUrl;
-            this.audioElement2.load();
-            this.preLoaded = true;
+        if (!isNaN(currentTime)) {
+            this.currentTime = this.formatTime(currentTime);
         }
     }
 
-    private drawTimeRanges(): void {
+/*    private drawTimeRanges(): void {
         let timeRanges: any = this.audioElement.buffered;
         for (let timeRange of timeRanges) {
 
         }
-    }
+    }*/
 
     private formatTime(seconds: number): string {
         let dateString: string = new Date(seconds * 1000).toISOString();

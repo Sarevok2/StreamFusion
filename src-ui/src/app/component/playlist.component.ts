@@ -1,7 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Song} from "../model/song";
 import {AudioComponent} from "./audio.component";
 import { AppConfig } from '../app.config';
+import {AudioService} from "../service/audio.service";
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 
@@ -9,13 +10,18 @@ const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
     selector: 'playlist',
     templateUrl: "playlist.component.html"
 })
-export class PlaylistComponent {
+export class PlaylistComponent implements OnInit {
     public expanded: boolean = true;
     private songs: Array<Song> = [];
     private currentIndex: number = 0;
-    @Input() private audio: AudioComponent;
 
-    constructor (private appConfig: AppConfig) {}
+    constructor (private appConfig: AppConfig, private audioService: AudioService) {}
+
+    ngOnInit(): void {
+        this.audioService.songEndedSubject.subscribe({
+            next: () => this.nextSong()
+        });
+    }
 
     public addSongs(params: any) {
         if (params.play) {
@@ -50,14 +56,10 @@ export class PlaylistComponent {
         this.playCurrentSong();
     }
 
-    public onSongEnded(): void {
-        this.nextSong();
-    }
-
     public clear(): void {
         this.songs = [];
         this.currentIndex = 0;
-        this.audio.stop();
+        this.audioService.stop();
     }
 
     private playCurrentSong(): void {
@@ -66,7 +68,7 @@ export class PlaylistComponent {
             const nextSong: Song = this.songs[(this.currentIndex + 1) % this.songs.length];
             const url: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.fileName;
             const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.fileName;
-            this.audio.play(url, nextUrl);
+            this.audioService.playSong(url, nextUrl);
         }
     }
 }
