@@ -75,6 +75,7 @@ export class AudioContainerMedia implements AudioContainer {
             (err: MediaError) => console.log("playAudio():Audio Error: " + err.code),
             () => this.onTimeUpdate
         );
+        this.audioService.onLoadedData();
     }
 
     public pause(): void {
@@ -90,7 +91,7 @@ export class AudioContainerMedia implements AudioContainer {
     }
 
     public setPosition(currentPosition: number): void {
-
+        this.media.seekTo(currentPosition);
     }
 
     private onTimeUpdate(): void {
@@ -99,9 +100,5 @@ export class AudioContainerMedia implements AudioContainer {
 
     private onEnded(): void {
         this.audioService.onEnded();
-    }
-
-    private onLoadedData(): void {
-        this.audioService.onLoadedData();
     }
 }
