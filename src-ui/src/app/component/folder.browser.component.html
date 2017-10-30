@@ -4,17 +4,15 @@
     <a routerLink="/settings" routerLinkActive="active">Settings</a>
 </h3>
 
-<div class="list-item toolbar" *ngFor="let folder of dirList.folders">
+<div class="list-item toolbar" *ngFor="let folder of getFolderNames()">
     <div class="file-link toolbar-text" (click)="onFolderClick(folder)">{{folder}}</div>
     <button class="toolbar__item" (click)="onAddDir(folder, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
     <button class="toolbar__item" (click)="onAddDir(folder, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
 </div>
 
 <h3>Songs</h3>
-<div class="list-item toolbar" *ngFor="let song of dirList.songs">
+<div class="list-item toolbar" *ngFor="let song of currentFolder.songs">
     <div class="toolbar-text">{{song.fileName}}</div>
-
     <button class="toolbar__item" (click)="onAddSong(song, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
     <button class="toolbar__item" (click)="onAddSong(song, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
-
 </div>

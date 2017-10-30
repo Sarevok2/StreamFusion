@@ -1,12 +1,16 @@
 package com.streamfusion.model;
 
-public class Song {
+import java.io.Serializable;
+import java.util.Date;
+
+public class Song implements Serializable {
 	private String path;
 	private String fileName;
 	private String artist;
 	private String album;
 	private String title;
 	private String track;
+	private Date lastModified;
 
 	public String getPath() {
 		return path;
@@ -54,5 +58,13 @@ public class Song {
 
 	public void setTrack(String track) {
 		this.track = track;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 }

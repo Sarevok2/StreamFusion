@@ -1,4 +1,4 @@
-import { FolderList } from '../model/folder.list';
+import { Folder } from '../model/folder';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FolderService } from '../service/folder.service';
 import { Song } from "../model/song";
@@ -8,31 +8,39 @@ import { Song } from "../model/song";
     templateUrl: 'folder.browser.component.html'
 })
 export class FolderBrowserComponent implements OnInit {
-    private currentDir: string = "";
-    public dirList: FolderList = new FolderList([],[]);
+    public dirList: Folder = new Folder(new Map<string, Folder>(),[]);
+    public currentFolder: Folder = this.dirList;
+    private currentPath: Folder[] = new Array<Folder>();
+
     @Output() private onAddSongs = new EventEmitter();
 
     public constructor(private folderService: FolderService){}
 
     ngOnInit(): void {
-       this.updateList();
+        this.folderService.getFolderList().subscribe((folderList: Folder) => {
+            this.dirList = folderList;
+            this.currentPath.push(this.dirList);
+            this.currentFolder = this.dirList;
+        });
     }
 
     public onFolderClick(folder: string): void {
-        this.currentDir += "/" + folder;
-        this.updateList();
+        const newFolder: Folder = this.currentFolder.folders[folder];
+        if (newFolder) {
+            this.currentPath.push(newFolder);
+            this.currentFolder = newFolder;
+        }
     }
 
     public goUp(): void {
-        const index = this.currentDir.lastIndexOf('/');
-        if (index >= 0) {
-            this.currentDir = this.currentDir.substring(0,index);
+        if (this.currentPath.length > 1) {
+            this.currentPath.pop();
+            this.currentFolder = this.currentPath[this.currentPath.length - 1];
         }
-        this.updateList();
     }
 
     public goUpVisible(): boolean {
-        return this.currentDir != "";
+        return this.currentPath.length > 1;
     }
 
     public onAddSong(song: Song, play: boolean): void {
@@ -40,16 +48,13 @@ export class FolderBrowserComponent implements OnInit {
     }
 
     public onAddDir(dir: string, play: boolean): void {
-        const subDir = this.currentDir + "/" + dir
-        this.folderService.getFolderList(subDir).subscribe((folderList: FolderList) => {
-            this.onAddSongs.emit({songs: folderList.songs, play: play});
-        });
+        const subDir: Folder = this.currentFolder.folders[dir];
+        if (subDir) {
+            this.onAddSongs.emit({songs: subDir.songs, play: play});
+        }
     }
 
-
-    private updateList(): void {
-        this.folderService.getFolderList(this.currentDir).subscribe((folderList: FolderList) => {
-            this.dirList = folderList;
-        });
+    public getFolderNames(): any {
+        return Object.keys(this.currentFolder.folders);
     }
 }

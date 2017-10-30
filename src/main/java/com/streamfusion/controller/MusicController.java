@@ -1,7 +1,8 @@
 package com.streamfusion.controller;
 
-import com.streamfusion.model.FolderListing;
-import com.streamfusion.service.FileService;
+import com.streamfusion.model.Folder;
+import com.streamfusion.service.SongStreamingService;
+import com.streamfusion.service.FolderStructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,10 @@ public class MusicController {
 	private static final Logger logger = LoggerFactory.getLogger(MusicController.class);
 
 	@Autowired
-	private FileService fileService;
+	private SongStreamingService songStreamingService;
+
+	@Autowired
+	private FolderStructureService folderStructureServicee;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome() {
@@ -48,7 +52,7 @@ public class MusicController {
 			}
 
 			String path = fullpath.replace('$', '.');
-			File songFile = fileService.loadFile(path);
+			File songFile = songStreamingService.loadFile(path);
 			long songFileLength = songFile.length();
 			range = range.substring(6);
 			String[] splitRange = range.split("-");
@@ -58,7 +62,7 @@ public class MusicController {
 
 			setResponseHeaders(response, songFileLength, songFile.lastModified(), rangeStart, rangeEnd, rangeLength);
 
-			fileService.streamFileToOutput(out, rangeStart, rangeLength);
+			songStreamingService.streamFileToOutput(out, rangeStart, rangeLength);
 		} catch (java.nio.file.NoSuchFileException e) {
 			logger.debug("No such file exception " + e.getClass() + " " + e.getMessage());
 			response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -73,8 +77,8 @@ public class MusicController {
 	@RequestMapping(value = "/folders", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public
 	@ResponseBody
-	FolderListing directoryList(@RequestParam("directory") String directory) throws java.io.UnsupportedEncodingException {
-		return fileService.getFolderListing(directory);
+	Folder directoryList() throws java.io.UnsupportedEncodingException {
+		return folderStructureServicee.getFullFolderStructure();
 	}
 
 	private void setResponseHeaders(HttpServletResponse response, long songFileLength, long lastModified, long rangeStart, long rangeEnd, long rangeLength) {
