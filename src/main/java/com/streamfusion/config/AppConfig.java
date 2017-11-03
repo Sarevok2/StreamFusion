@@ -1,8 +1,6 @@
 package com.streamfusion.config;
 
 import com.streamfusion.model.Folder;
-import com.streamfusion.service.FolderStructureService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

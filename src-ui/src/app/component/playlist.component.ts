@@ -66,9 +66,13 @@ export class PlaylistComponent implements OnInit {
         if (this.songs.length > 0) {
             const currentSong: Song = this.songs[this.currentIndex];
             const nextSong: Song = this.songs[(this.currentIndex + 1) % this.songs.length];
-            const url: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + currentSong.path + "/" + currentSong.fileName;
+            const url: string = this.createPlayTrackURL(currentSong.path,currentSong.fileName);
             const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.fileName;
             this.audioService.playSong(url, nextUrl);
         }
+    }
+
+    private createPlayTrackURL(path: string, fileName: string): string {
+        return this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + encodeURIComponent(path) + "/" + encodeURIComponent(fileName);
     }
 }
