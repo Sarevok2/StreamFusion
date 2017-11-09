@@ -78,23 +78,31 @@ public class FolderStructureService {
 				oldFolder.addSong(newSong);
 			}
 		}
+		List<String> foldersToDelete = new ArrayList<>();
 		for (String key: oldFolder.getFolders().keySet()) {
 			Optional<File> newSubFolder = newSubFolders.stream().filter(p -> p.getName().equals(key)).findFirst();
 			if (!newSubFolder.isPresent()) {
-				oldFolder.getFolders().remove(key);
+				foldersToDelete.add(key);
 			} else {
 				updateFolder(newSubFolder.get(), oldFolder.getFolders().get(key), relativePath + AppConfig.DIRECTORY_SEPARATOR + key, songsToScan);
 			}
 		}
+		for (String folderToDelete: foldersToDelete) {
+			oldFolder.getFolders().remove(folderToDelete);
+		}
+		List<Song> songsToDelete = new ArrayList<>();
 		for (Song oldSong: oldFolder.getSongs()) {
 			Optional<File> newSong = newSongs.stream().filter(p -> p.getName().equals(oldSong.getFileName())).findFirst();
 			if (!newSong.isPresent()) {
-				oldFolder.getSongs().remove(oldSong);
+				songsToDelete.add(oldSong);
 			} else {
 				if (oldSong.getLastModified() == null || (oldSong.getLastModified().getTime() < (newSong.get().lastModified() - 5000))) {
 					songsToScan.add(oldSong);
 				}
 			}
+		}
+		for (Song songToDelete: songsToDelete) {
+			oldFolder.getSongs().remove(songToDelete);
 		}
 		oldFolder.sortAll();
 	}

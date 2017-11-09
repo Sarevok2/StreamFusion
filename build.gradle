@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-	compile 'org.springframework:spring-webmvc:5.0.0.RELEASE'
+	compile 'org.springframework:spring-webmvc:5.0.1.RELEASE'
 	compile 'ch.qos.logback:logback-classic:1.2.3'
 	compile 'jstl:jstl:1.2'
 	compile 'com.fasterxml.jackson.core:jackson-core:2.9.2'
