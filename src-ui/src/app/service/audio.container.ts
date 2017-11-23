@@ -72,7 +72,7 @@ export class AudioContainerMedia implements AudioContainer {
     public setUrl(url: string): void {
         this.media = new Media(url,
             () => this.onEnded,
-            (err: MediaError) => console.log("playAudio():Audio Error: " + err.code),
+            (err: MediaError) => console.log("setUrl():Audio Error: " + err.code),
             () => this.onTimeUpdate
         );
         this.audioService.onLoadedData();
@@ -83,11 +83,11 @@ export class AudioContainerMedia implements AudioContainer {
     }
 
     public getDuration(): number {
-        return this.media.getDuration();
+        return this.media ? this.media.getDuration() : 0;
     }
 
     public getCurrentTime(): Promise<number> {
-        return new Promise((resolve, reject) => this.media.getCurrentPosition(resolve, reject));
+        return new Promise((resolve, reject) => this.media ? this.media.getCurrentPosition(resolve, reject) : resolve(0));
     }
 
     public setPosition(currentPosition: number): void {

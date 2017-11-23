@@ -45,19 +45,24 @@ public class MusicController {
 	void playtrack(@RequestParam("fullpath") String fullpath, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("get " + fullpath);
 		try (ServletOutputStream out = response.getOutputStream()){
-			String range = request.getHeader("Range");
-			if (range == null || !range.matches("^bytes=\\d*-\\d*")) {// range is invalid
-				response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
-				return;
-			}
-
 			String path = fullpath.replace('$', '.');
 			File songFile = songStreamingService.loadFile(path);
 			long songFileLength = songFile.length();
-			range = range.substring(6);
-			String[] splitRange = range.split("-");
-			long rangeStart = Long.valueOf(splitRange[0]);
-			long rangeEnd = (splitRange.length > 1) ? Long.valueOf(splitRange[1]) : (songFileLength - 1);
+
+			long rangeStart;
+			long rangeEnd;
+			String range = request.getHeader("Range");
+			if (range == null || !range.matches("^bytes=\\d*-\\d*")) {// range is invalid
+				/*response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+				return;*/
+				rangeStart = 0;
+				rangeEnd = songFileLength - 1;
+			} else {
+				range = range.substring(6);
+				String[] splitRange = range.split("-");
+				rangeStart = Long.valueOf(splitRange[0]);
+				rangeEnd = (splitRange.length > 1) ? Long.valueOf(splitRange[1]) : (songFileLength - 1);
+			}
 			long rangeLength = rangeEnd - rangeStart + 1;
 
 			setResponseHeaders(response, songFileLength, songFile.lastModified(), rangeStart, rangeEnd, rangeLength);

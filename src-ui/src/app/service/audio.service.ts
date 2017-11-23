@@ -18,13 +18,8 @@ export class AudioService {
     private wind: any = window;
 
     constructor() {
-        if (!this.isCordova) {
-            this.audioContainer = new AudioContainerHTML(this);
-            this.audioContainer2 = new AudioContainerHTML(this);
-        } else {
-            this.audioContainer = new AudioContainerMedia(this);
-            this.audioContainer2 = new AudioContainerMedia(this);
-        }
+        this.audioContainer = new AudioContainerHTML(this);
+        this.audioContainer2 = new AudioContainerHTML(this);
         this.timeUpdateSubject = new BehaviorSubject(0);
         this.songEndedSubject = new BehaviorSubject(null);
         this.songChangedSubject = new BehaviorSubject(null);
@@ -47,7 +42,6 @@ export class AudioService {
     public onLoadedData(): void {
         if (!this.isPlaying) {
             this.resume();
-            //TODO: This won't fire on Cordova
             this.songChangedSubject.next(null);
         }
     }
@@ -74,14 +68,8 @@ export class AudioService {
     }
 
     public resume(): void {
-        if (this.isCordova) {
-            if (!this.isPlaying && this.isCordova) {
-                this.wind.powerManagement.dim(function () {
-                    console.log('Wakelock acquired');
-                }, function () {
-                    console.log('Failed to acquire wakelock');
-                });
-            }
+        if (!this.isPlaying && this.isCordova) {
+            this.wind.cordova.plugins.backgroundMode.enable();
         }
         this.audioContainer.play();
         this.isPlaying = true;
@@ -91,11 +79,7 @@ export class AudioService {
         this.audioContainer.pause();
         this.isPlaying = false;
         if (this.isCordova) {
-            this.wind.powerManagement.release(function () {
-                console.log('Wakelock released');
-            }, function () {
-                console.log('Failed to release wakelock');
-            });
+            this.wind.cordova.plugins.backgroundMode.disable();
         }
     }
 
