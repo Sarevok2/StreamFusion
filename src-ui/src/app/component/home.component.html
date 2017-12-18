@@ -1,5 +1,11 @@
 <div class="main-panel">
     <audioPlayer (previousSong)="onPreviousSong()" (nextSong)="onNextSong()"></audioPlayer>
-    <playlist class="sub-panel"></playlist>
-    <folder-browser class="sub-panel" (onAddSongs)="onAddSongs($event)"></folder-browser>
+    <div style="flex-grow: 1; display: flex;">
+    	<scrollbar #browserScrollbar class="main-scroll-panel">
+			<folder-browser (onAddSongs)="onAddSongs($event)" (onListUpdate)="updateBrowserScrollbar()"></folder-browser>
+		</scrollbar>
+        <scrollbar #playlistScrollbar class="main-scroll-panel">
+		    <playlist (onListUpdate)="updatePlaylistScrollbar()"></playlist>
+        </scrollbar>
+	</div>
 </div>

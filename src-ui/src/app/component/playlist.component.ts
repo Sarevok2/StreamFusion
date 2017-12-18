@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Song} from "../model/song";
 import {AudioComponent} from "./audio.component";
 import { AppConfig } from '../app.config';
@@ -14,6 +14,7 @@ export class PlaylistComponent implements OnInit {
     public expanded: boolean = true;
     private songs: Array<Song> = [];
     private currentIndex: number = 0;
+    @Output() private onListUpdate = new EventEmitter();
 
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
 
@@ -31,6 +32,7 @@ export class PlaylistComponent implements OnInit {
         } else {
             this.songs = this.songs.concat(params.songs);
         }
+        this.onListUpdate.emit();
     }
 
     public toggleExpanded(): void {
@@ -44,6 +46,7 @@ export class PlaylistComponent implements OnInit {
 
     public onRemoveSong(index: number): void {
         this.songs.splice(index,1);
+        this.onListUpdate.emit();
     }
 
     public nextSong(): void {
@@ -60,6 +63,7 @@ export class PlaylistComponent implements OnInit {
         this.songs = [];
         this.currentIndex = 0;
         this.audioService.stop();
+        this.onListUpdate.emit();
     }
 
     private playCurrentSong(): void {

@@ -2,6 +2,7 @@ body {
 	background-color: #222222;
 	color: white;
 	font-size: 20px;
+	margin: 0;
 }
 
 a:link, a:visited, .file-link {
@@ -11,10 +12,16 @@ a:link, a:visited, .file-link {
 }
 
 .main-panel {
-	margin-top: 5px;
-	margin-bottom: 5px;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
-.
+
+.main-scroll-panel {
+    flex-grow: 1;
+    flex-basis: 50%;
+}
+
 .sub-panel {
   width: 100%;
 }
@@ -65,6 +72,7 @@ button {
 
 .audio-comp {
     margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .seek-bar {
@@ -89,4 +97,31 @@ button {
 
 .settings-button-bar__button {
     width: 70px;
+}
+
+.scrollbar {
+    position: relative;
+}
+
+.scrollbar__container {
+  overflow: hidden;
+  overflow-anchor: none;
+  position: relative;
+  height: 100%;
+}
+
+.scrollbar__vertical-bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: rgba(100, 100, 100, 0.5);;
+	width: 10px;
+	height: 100%;
+}
+
+.scrollbar__vertical-marker {
+	background-color: #333;
+	position: absolute;
+	right: 1px;
+	width: 8px;
 }

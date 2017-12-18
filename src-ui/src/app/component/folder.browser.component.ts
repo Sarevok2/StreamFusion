@@ -13,6 +13,7 @@ export class FolderBrowserComponent implements OnInit {
     private currentPath: Folder[] = new Array<Folder>();
 
     @Output() private onAddSongs = new EventEmitter();
+    @Output() private onListUpdate = new EventEmitter();
 
     public constructor(private folderService: FolderService){}
 
@@ -30,6 +31,7 @@ export class FolderBrowserComponent implements OnInit {
             this.currentPath.push(newFolder);
             this.currentFolder = newFolder;
         }
+        this.onListUpdate.emit();
     }
 
     public goUp(): void {
@@ -37,6 +39,7 @@ export class FolderBrowserComponent implements OnInit {
             this.currentPath.pop();
             this.currentFolder = this.currentPath[this.currentPath.length - 1];
         }
+        this.onListUpdate.emit();
     }
 
     public goUpVisible(): boolean {

@@ -9,9 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './component/app.component';
 import { HomeComponent } from './component/home.component';
-import {SettingsComponent} from "./component/settings.component";
-import {Routes, RouterModule} from "@angular/router";
-import {AudioService} from "./service/audio.service";
+import { ScrollbarComponent } from './component/scrollbar.component';
+import { SettingsComponent } from "./component/settings.component";
+import { Routes, RouterModule } from "@angular/router";
+import { AudioService } from "./service/audio.service";
 
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -25,7 +26,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent, PlaylistComponent, FolderBrowserComponent, AudioComponent, SettingsComponent
+    AppComponent, HomeComponent, PlaylistComponent, FolderBrowserComponent, AudioComponent, SettingsComponent, ScrollbarComponent
   ],
   imports: [
     RouterModule.forRoot(
