@@ -14,6 +14,8 @@ export class ScrollbarComponent implements OnInit {
 	@Input() public enableVerticalScrollbar: boolean = true;
 	@Input() public enableHorizontalScrollbar: boolean = true;
     @ViewChild('scrollContainer') private scrollContainer: ElementRef;
+    private isMouseOnElement: boolean = false;
+    private isDraggingScrollbar: boolean = false;
 
     constructor(private el: ElementRef) {
         el.nativeElement.className += " scrollbar";
@@ -36,27 +38,30 @@ export class ScrollbarComponent implements OnInit {
 
     @HostListener("wheel", ['$event'])
 	private onWindowScroll(event: WheelEvent) {
-		this.scrollContainer.nativeElement.scrollTop -= (event.wheelDeltaY / 5);
+		this.scrollContainer.nativeElement.scrollTop -= (event.wheelDeltaY / 2);
         this.updateScrollMarkerStart();
         event.stopPropagation();
 	}
 
     @HostListener("mouseenter")
     private onMouseEnter() {
+        this.isMouseOnElement = true;
         this.showVertical = this.enableVerticalScrollbar && (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
         this.showHorizontal = this.enableHorizontalScrollbar && (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
     }
 
     @HostListener("mouseleave")
     private onMouseLeave() {
-        this.showVertical = false;
-        this.showHorizontal = false;
+        this.isMouseOnElement = false;
+        this.showVertical = this.enableVerticalScrollbar && this.isDraggingScrollbar;
+        this.showHorizontal = this.enableHorizontalScrollbar && this.isDraggingScrollbar;
     }
 
     public onVertMarkerMouseDown(event: MouseEvent, isVert: boolean): void {
         const scrollEl: any = this.scrollContainer.nativeElement;
         const mouseStart: number = isVert ? event.clientY : event.clientX;
         const scrollStart: number = isVert ? scrollEl.scrollTop : scrollEl.scrollLeft;
+        this.isDraggingScrollbar = true;
         const moveHandler = (event: MouseEvent) => {
             if (isVert) {
                 scrollEl.scrollTop = ((event.clientY - mouseStart)/ scrollEl.clientHeight*scrollEl.scrollHeight) + scrollStart;
@@ -68,6 +73,9 @@ export class ScrollbarComponent implements OnInit {
         };
         document.addEventListener("mousemove", moveHandler);
         document.addEventListener("mouseup", () => {
+            this.isDraggingScrollbar = false;
+            this.showVertical = this.enableVerticalScrollbar && this.isMouseOnElement;
+            this.showHorizontal = this.enableHorizontalScrollbar && this.isMouseOnElement;
             document.removeEventListener("mousemove", moveHandler);
         })
     }
