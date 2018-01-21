@@ -1,4 +1,5 @@
 import {Song} from "./song";
-export class Folder {
-    constructor (public folders: object, public songs: Song[]) {}
+import {TreeItem} from "./tree.item";
+export class Folder extends TreeItem {
+    constructor (fileName: string, public folders: Folder[], public songs: Song[]) {super(fileName);}
 }

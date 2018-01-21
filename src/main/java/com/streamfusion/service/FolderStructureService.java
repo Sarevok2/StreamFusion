@@ -35,7 +35,6 @@ public class FolderStructureService {
 	@Autowired
 	private Folder rootFolder;
 
-
 	public Folder getFullFolderStructure() {
 		return rootFolder;
 	}
@@ -66,8 +65,8 @@ public class FolderStructureService {
 		List<File> newSubFolders = Arrays.stream(files).filter(p -> p.isDirectory()).collect(Collectors.toList());
 		List<File> newSongs = Arrays.stream(files).filter(p -> !p.isDirectory()).collect(Collectors.toList());
 		for (File file : newSubFolders) {
-			if (!oldFolder.getFolders().containsKey(file.getName())) {
-				oldFolder.addFolder(file.getName(), new Folder());
+			if (!oldFolder.getFolders().stream().anyMatch(folder -> folder.getFileName().equals(file.getName()))) {
+				oldFolder.addFolder(new Folder(file.getName()));
 			}
 		}
 		for (File file : newSongs) {
@@ -79,12 +78,12 @@ public class FolderStructureService {
 			}
 		}
 		List<String> foldersToDelete = new ArrayList<>();
-		for (String key: oldFolder.getFolders().keySet()) {
-			Optional<File> newSubFolder = newSubFolders.stream().filter(p -> p.getName().equals(key)).findFirst();
+		for (Folder folder: oldFolder.getFolders()) {
+			Optional<File> newSubFolder = newSubFolders.stream().filter(p -> p.getName().equals(folder.getFileName())).findFirst();
 			if (!newSubFolder.isPresent()) {
-				foldersToDelete.add(key);
+				foldersToDelete.add(folder.getFileName());
 			} else {
-				updateFolder(newSubFolder.get(), oldFolder.getFolders().get(key), relativePath + AppConfig.DIRECTORY_SEPARATOR + key, songsToScan);
+				updateFolder(newSubFolder.get(), folder, relativePath + AppConfig.DIRECTORY_SEPARATOR + folder.getFileName(), songsToScan);
 			}
 		}
 		for (String folderToDelete: foldersToDelete) {

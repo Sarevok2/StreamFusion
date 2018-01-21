@@ -6,7 +6,7 @@ import { AudioComponent } from './component/audio.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './component/app.component';
 import { HomeComponent } from './component/home.component';
 import { ScrollbarComponent } from './component/scrollbar.component';
@@ -35,7 +35,7 @@ const appRoutes: Routes = [
     ),
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpClientModule
   ],
   providers: [
     FolderService,

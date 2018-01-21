@@ -1,10 +1,10 @@
-import {Component, ElementRef, HostListener, Input, ViewChild, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'scrollbar',
   templateUrl: 'scrollbar.component.html'
 })
-export class ScrollbarComponent implements OnInit {
+export class ScrollbarComponent{
 	public showVertical: boolean = true;
 	public showHorizontal: boolean = false;
 	public verticalMarkerTop: string = '0px';
@@ -22,9 +22,6 @@ export class ScrollbarComponent implements OnInit {
         this.showHorizontal = false;
         this.showVertical = false;
     }
-    public ngOnInit(): void {
-        //this.updateSize();
-    }
 
 	public updateSize(): void {
 	    setTimeout(()=> {
@@ -33,6 +30,7 @@ export class ScrollbarComponent implements OnInit {
             scrollMarkerSize = Math.pow(this.scrollContainer.nativeElement.clientWidth, 2) / this.scrollContainer.nativeElement.scrollWidth - 2;
             this.horizontalMarkerWidth = scrollMarkerSize + 'px';
             this.updateScrollMarkerStart();
+            this.updateScrollbarVisibility();
         }, 0);
     }
 
@@ -46,15 +44,13 @@ export class ScrollbarComponent implements OnInit {
     @HostListener("mouseenter")
     private onMouseEnter() {
         this.isMouseOnElement = true;
-        this.showVertical = this.enableVerticalScrollbar && (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
-        this.showHorizontal = this.enableHorizontalScrollbar && (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
+        this.updateScrollbarVisibility();
     }
 
     @HostListener("mouseleave")
     private onMouseLeave() {
         this.isMouseOnElement = false;
-        this.showVertical = this.enableVerticalScrollbar && this.isDraggingScrollbar;
-        this.showHorizontal = this.enableHorizontalScrollbar && this.isDraggingScrollbar;
+        this.updateScrollbarVisibility();
     }
 
     public onVertMarkerMouseDown(event: MouseEvent, isVert: boolean): void {
@@ -85,5 +81,15 @@ export class ScrollbarComponent implements OnInit {
         this.verticalMarkerTop = scrollMarkerStart + 'px';
         scrollMarkerStart = this.scrollContainer.nativeElement.clientWidth * this.scrollContainer.nativeElement.scrollLeft / this.scrollContainer.nativeElement.scrollWidth + 1;
         this.horizontalMarkerLeft = scrollMarkerStart + 'px';
+    }
+
+    private updateScrollbarVisibility(): void {
+        if (this.isMouseOnElement) {
+            this.showVertical = this.enableVerticalScrollbar && (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
+            this.showHorizontal = this.enableHorizontalScrollbar && (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
+        } else {
+            this.showVertical = this.enableVerticalScrollbar && this.isDraggingScrollbar;
+            this.showHorizontal = this.enableHorizontalScrollbar && this.isDraggingScrollbar;
+        }
     }
 }

@@ -38,7 +38,7 @@ public class AppConfig {
 			ObjectInputStream ois = new ObjectInputStream(fin);
 			return (Folder) ois.readObject();
 		} catch (Exception ex) { //file does not exist
-			return new Folder();
+			return new Folder("");
 		}
 	}
 }
