@@ -1,6 +1,7 @@
 <h3>
     Folders
     <a routerLink="/settings" routerLinkActive="active">Settings</a>
+    <button (click)="goToPlaylist()" class="mobile-button goto-playlist-button">P</button>
 </h3>
 
 <div class="list-item toolbar" *ngFor="let treeItem of treeItems">

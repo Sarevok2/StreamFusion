@@ -1,11 +1,11 @@
 <div class="main-panel">
     <audioPlayer (previousSong)="onPreviousSong()" (nextSong)="onNextSong()"></audioPlayer>
-    <div style="flex-grow: 1; display: flex;">
-    	<scrollbar [enableHorizontalScrollbar]="false" #browserScrollbar class="main-scroll-panel">
-			<folder-browser (onAddSongs)="onAddSongs($event)" (onListUpdate)="updateBrowserScrollbar()"></folder-browser>
+    <div class="content-panel">
+    	<scrollbar [enableHorizontalScrollbar]="false" #browserScrollbar class="main-scroll-panel" [ngClass]="{'hide-mobile': browserHidden}">
+			<folder-browser (onAddSongs)="onAddSongs($event)" (onListUpdate)="updateBrowserScrollbar()" (onGoToPlaylist)="showPlaylist()"></folder-browser>
 		</scrollbar>
-        <scrollbar [enableHorizontalScrollbar]="false" #playlistScrollbar class="main-scroll-panel">
-		    <playlist (onListUpdate)="updatePlaylistScrollbar()"></playlist>
+        <scrollbar [enableHorizontalScrollbar]="false" #playlistScrollbar class="main-scroll-panel" [ngClass]="{'hide-mobile': playlistHidden}">
+		    <playlist (onListUpdate)="updatePlaylistScrollbar()" (onGoToBrowser)="showBrowser()"></playlist>
         </scrollbar>
 	</div>
 </div>

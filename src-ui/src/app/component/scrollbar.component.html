@@ -2,8 +2,8 @@
     <ng-content></ng-content>
 </div>
 <div *ngIf="showVertical" class="scrollbar__vertical-bar">
-    <div class="scrollbar__vertical-marker" (mousedown)="onVertMarkerMouseDown($event, true)" [ngStyle]="{'top': verticalMarkerTop, 'height': verticalMarkerHeight}"></div>
+    <div class="scrollbar__vertical-marker" (mousedown)="onMarkerMouseDown($event, true)" [ngStyle]="{'top': verticalMarkerTop, 'height': verticalMarkerHeight}"></div>
 </div>
 <div *ngIf="showHorizontal" class="scrollbar__horizontal-bar">
-    <div class="scrollbar__horizontal-marker" [ngStyle]="{'top': horizontalMarkerLeft, 'height': horizontalMarkerWidth}"></div>
+    <div class="scrollbar__horizontal-marker" (mousedown)="onMarkerMouseDown($event, true)" [ngStyle]="{'top': horizontalMarkerLeft, 'height': horizontalMarkerWidth}"></div>
 </div>

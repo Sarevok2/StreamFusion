@@ -15,6 +15,7 @@ export class FolderBrowserComponent implements OnInit {
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onListUpdate = new EventEmitter();
+    @Output() private onGoToPlaylist = new EventEmitter();
 
     public constructor(private folderService: FolderService){}
 
@@ -53,6 +54,10 @@ export class FolderBrowserComponent implements OnInit {
     public onAddItem(item: TreeItem, play: boolean): void {
         let songs: Array<Song> = item.isFolder ? (<Folder>item).songs : [<Song>item];
         this.onAddSongs.emit({songs: songs, play: play});
+    }
+
+    public goToPlaylist(): void {
+        this.onGoToPlaylist.emit();
     }
 
     private updateDepth(folder: Folder, depth: number): void {

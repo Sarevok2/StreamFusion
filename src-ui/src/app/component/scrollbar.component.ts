@@ -15,6 +15,11 @@ export class ScrollbarComponent{
 	@Input() public enableHorizontalScrollbar: boolean = true;
     @ViewChild('scrollContainer') private scrollContainer: ElementRef;
     private isMouseOnElement: boolean = false;
+    private isTouchDown: boolean = false;
+    private touchStartX: number;
+    private touchStartY: number;
+    private touchScrollStartX: number;
+    private touchScrollStartY: number;
     private isDraggingScrollbar: boolean = false;
 
     constructor(private el: ElementRef) {
@@ -53,7 +58,48 @@ export class ScrollbarComponent{
         this.updateScrollbarVisibility();
     }
 
-    public onVertMarkerMouseDown(event: MouseEvent, isVert: boolean): void {
+    @HostListener("touchstart", ['$event'])
+    private onTouchStart(event: TouchEvent) {
+        this.isTouchDown = true;
+        let touch: Touch = event.targetTouches[0];
+        if (touch) {
+            this.touchStartX = touch.pageX;
+            this.touchStartY = touch.pageY;
+            this.touchScrollStartX = this.scrollContainer.nativeElement.scrollLeft;
+            this.touchScrollStartY = this.scrollContainer.nativeElement.scrollTop;
+        }
+        this.updateScrollbarVisibility();
+        event.stopPropagation();
+    }
+
+    @HostListener("touchmove", ['$event'])
+    private onTouchMove(event: TouchEvent) {
+        let touch: Touch = event.targetTouches[0];
+        if (touch) {
+            this.scrollContainer.nativeElement.scrollLeft = this.touchScrollStartX + this.touchStartX - touch.pageX;
+            this.scrollContainer.nativeElement.scrollTop = this.touchScrollStartY + this.touchStartY - touch.pageY;
+        }
+        this.updateScrollMarkerStart();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    @HostListener("touchend")
+    private onTouchEnd() {
+        this.isTouchDown = false;
+        this.updateScrollbarVisibility();
+        event.stopPropagation();
+    }
+
+    @HostListener("touchcancel")
+    private onTouchCancel() {
+        this.isTouchDown = false;
+        this.updateScrollbarVisibility();
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    public onMarkerMouseDown(event: MouseEvent, isVert: boolean): void {
         const scrollEl: any = this.scrollContainer.nativeElement;
         const mouseStart: number = isVert ? event.clientY : event.clientX;
         const scrollStart: number = isVert ? scrollEl.scrollTop : scrollEl.scrollLeft;
@@ -84,7 +130,7 @@ export class ScrollbarComponent{
     }
 
     private updateScrollbarVisibility(): void {
-        if (this.isMouseOnElement) {
+        if (this.isMouseOnElement || this.isTouchDown) {
             this.showVertical = this.enableVerticalScrollbar && (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
             this.showHorizontal = this.enableHorizontalScrollbar && (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
         } else {

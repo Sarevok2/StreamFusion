@@ -11,10 +11,10 @@ const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
     templateUrl: "playlist.component.html"
 })
 export class PlaylistComponent implements OnInit {
-    public expanded: boolean = true;
-    private songs: Array<Song> = [];
+    public songs: Array<Song> = [];
     private currentIndex: number = 0;
     @Output() private onListUpdate = new EventEmitter();
+    @Output() private onGoToBrowser = new EventEmitter();
 
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
 
@@ -33,10 +33,6 @@ export class PlaylistComponent implements OnInit {
             this.songs = this.songs.concat(params.songs);
         }
         this.onListUpdate.emit();
-    }
-
-    public toggleExpanded(): void {
-        this.expanded = !this.expanded;
     }
 
     public onPlaySong(index: number): void {
@@ -64,6 +60,10 @@ export class PlaylistComponent implements OnInit {
         this.currentIndex = 0;
         this.audioService.stop();
         this.onListUpdate.emit();
+    }
+
+    public goToBrowser(): void {
+        this.onGoToBrowser.emit();
     }
 
     private playCurrentSong(): void {

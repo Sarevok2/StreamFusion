@@ -17,21 +17,16 @@ a:link, a:visited, .file-link {
 	flex-direction: column;
 }
 
+.content-panel {
+    flex-grow: 1;
+    display: flex;
+}
+
 .main-scroll-panel {
     flex-grow: 1;
     flex-basis: 50%;
 }
 
-.sub-panel {
-  width: 100%;
-}
-
-@media screen and (min-width: 80em) {
-  .sub-panel {
-    width: 50%;
-    float: right;
-  }
-}
 .list-item {
 	padding: 5px;
     height: 27px;
@@ -50,6 +45,21 @@ button {
 	color: white;
 	border: 1px solid #888888;
 	border-radius: 5px;
+}
+
+.mobile-button {
+    display: none;
+    font-size: 22px;
+}
+
+@media screen and (max-width: 80em) {
+    .mobile-button {
+        display: inline-block;
+    }
+
+    .hide-mobile {
+        display: none;
+    }
 }
 
 .toolbar {

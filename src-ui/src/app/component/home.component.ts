@@ -9,6 +9,8 @@ import {ScrollbarComponent} from "./scrollbar.component";
 })
 export class HomeComponent {
     @ViewChild(PlaylistComponent) public playlist: PlaylistComponent;
+    public playlistHidden: boolean = true;
+    public browserHidden: boolean = false;
     @ViewChild('browserScrollbar') private browserScrollbar: ScrollbarComponent;
     @ViewChild('playlistScrollbar') private playlistScrollbar: ScrollbarComponent;
 
@@ -33,5 +35,17 @@ export class HomeComponent {
 
     public onNextSong(): void {
         this.playlist.nextSong();
+    }
+
+    public showBrowser(): void {
+        this.playlistHidden = true;
+        this.browserHidden = false;
+        this.browserScrollbar.updateSize();
+    }
+
+    public showPlaylist(): void {
+        this.playlistHidden = false;
+        this.browserHidden = true;
+        this.playlistScrollbar.updateSize();
     }
 }
