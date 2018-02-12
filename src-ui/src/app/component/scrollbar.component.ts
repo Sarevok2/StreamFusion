@@ -58,7 +58,7 @@ export class ScrollbarComponent{
         this.updateScrollbarVisibility();
     }
 
-    @HostListener("touchstart", ['$event'])
+/*    @HostListener("touchstart", ['$event'])
     private onTouchStart(event: TouchEvent) {
         this.isTouchDown = true;
         let touch: Touch = event.targetTouches[0];
@@ -82,7 +82,7 @@ export class ScrollbarComponent{
         this.updateScrollMarkerStart();
         event.stopPropagation();
         event.preventDefault();
-    }
+    }*/
 
     @HostListener("touchend")
     private onTouchEnd() {

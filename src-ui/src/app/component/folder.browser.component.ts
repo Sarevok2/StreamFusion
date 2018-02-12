@@ -1,9 +1,10 @@
 import { Folder } from '../model/folder';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
 import { FolderService } from '../service/folder.service';
 import { Song } from "../model/song";
 import {TreeItem} from "../model/tree.item";
 import {Tree} from "@angular/router/src/utils/tree";
+import {ScrollbarComponent} from "./scrollbar.component";
 
 @Component({
     selector: 'folder-browser',
@@ -14,8 +15,8 @@ export class FolderBrowserComponent implements OnInit {
     public treeItems: Array<TreeItem> = new Array<TreeItem>();
 
     @Output() private onAddSongs = new EventEmitter();
-    @Output() private onListUpdate = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
+    @ViewChild('browserScrollbar') private browserScrollbar: ScrollbarComponent;
 
     public constructor(private folderService: FolderService){}
 
@@ -48,7 +49,7 @@ export class FolderBrowserComponent implements OnInit {
             this.treeItems.splice(index + 1, 0, ...subItems);
             folder.expanded = true;
         }
-        this.onListUpdate.emit();
+        this.browserScrollbar.updateSize();
     }
 
     public onAddItem(item: TreeItem, play: boolean): void {

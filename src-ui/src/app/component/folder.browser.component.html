@@ -3,9 +3,10 @@
     <a routerLink="/settings" routerLinkActive="active">Settings</a>
     <button (click)="goToPlaylist()" class="mobile-button goto-playlist-button">P</button>
 </h3>
-
-<div class="list-item toolbar" *ngFor="let treeItem of treeItems">
-    <div (click)="onTreeItemClick(treeItem)"  class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
-    <button class="toolbar__item" (click)="onAddItem(treeItem, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
-    <button class="toolbar__item" (click)="onAddItem(treeItem, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+<div class="main-scroll-panel">
+    <div class="list-item toolbar" *ngFor="let treeItem of treeItems">
+        <div (click)="onTreeItemClick(treeItem)"  class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
+        <button class="toolbar__item" (click)="onAddItem(treeItem, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
+        <button class="toolbar__item" (click)="onAddItem(treeItem, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+    </div>
 </div>

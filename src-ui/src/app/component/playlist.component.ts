@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Song} from "../model/song";
 import {AudioComponent} from "./audio.component";
 import { AppConfig } from '../app.config';
 import {AudioService} from "../service/audio.service";
+import {ScrollbarComponent} from "./scrollbar.component";
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 
@@ -13,8 +14,8 @@ const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 export class PlaylistComponent implements OnInit {
     public songs: Array<Song> = [];
     private currentIndex: number = 0;
-    @Output() private onListUpdate = new EventEmitter();
     @Output() private onGoToBrowser = new EventEmitter();
+    @ViewChild('playlistScrollbar') private playlistScrollbar: ScrollbarComponent;
 
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
 
@@ -32,7 +33,7 @@ export class PlaylistComponent implements OnInit {
         } else {
             this.songs = this.songs.concat(params.songs);
         }
-        this.onListUpdate.emit();
+        this.playlistScrollbar.updateSize();
     }
 
     public onPlaySong(index: number): void {
@@ -42,7 +43,7 @@ export class PlaylistComponent implements OnInit {
 
     public onRemoveSong(index: number): void {
         this.songs.splice(index,1);
-        this.onListUpdate.emit();
+        this.playlistScrollbar.updateSize();
     }
 
     public nextSong(): void {
@@ -59,7 +60,7 @@ export class PlaylistComponent implements OnInit {
         this.songs = [];
         this.currentIndex = 0;
         this.audioService.stop();
-        this.onListUpdate.emit();
+        this.playlistScrollbar.updateSize();
     }
 
     public goToBrowser(): void {

@@ -20,11 +20,28 @@ a:link, a:visited, .file-link {
 .content-panel {
     flex-grow: 1;
     display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+@media screen and (min-width: 48em) {
+    .content-panel {
+        flex-direction: row;
+    }
+
+    .main-list-panel {
+        width:50%;
+    }
+}
+
+.main-list-panel {
+    display: flex;
+    flex-direction: column;
 }
 
 .main-scroll-panel {
-    flex-grow: 1;
-    flex-basis: 50%;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .list-item {
@@ -52,7 +69,7 @@ button {
     font-size: 22px;
 }
 
-@media screen and (max-width: 80em) {
+@media screen and (max-width: 48em) {
     .mobile-button {
         display: inline-block;
     }
@@ -124,7 +141,7 @@ button {
 	position: absolute;
 	top: 0;
 	right: 0;
-	background-color: rgba(100, 100, 100, 0.5);;
+	background-color: rgba(100, 100, 100, 0.5);
 	width: 10px;
 	height: 100%;
     border-radius: 5px;
@@ -136,4 +153,20 @@ button {
 	right: 1px;
 	width: 8px;
     border-radius: 5px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(100, 100, 100, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
