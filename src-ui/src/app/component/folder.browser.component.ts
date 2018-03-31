@@ -16,7 +16,6 @@ export class FolderBrowserComponent implements OnInit {
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
-    @ViewChild('browserScrollbar') private browserScrollbar: ScrollbarComponent;
 
     public constructor(private folderService: FolderService){}
 
@@ -49,7 +48,6 @@ export class FolderBrowserComponent implements OnInit {
             this.treeItems.splice(index + 1, 0, ...subItems);
             folder.expanded = true;
         }
-        this.browserScrollbar.updateSize();
     }
 
     public onAddItem(item: TreeItem, play: boolean): void {

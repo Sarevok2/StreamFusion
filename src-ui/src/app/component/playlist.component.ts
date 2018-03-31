@@ -42,8 +42,29 @@ export class PlaylistComponent implements OnInit {
     }
 
     public onRemoveSong(index: number): void {
-        this.songs.splice(index,1);
+        this.songs.splice(index, 1);
         this.playlistScrollbar.updateSize();
+    }
+
+    public onCloneSong(index: number): void {
+        this.songs.splice(index, 0, this.songs[index]);    
+    }
+
+    public onMoveUp(index: number): void {
+        if (index > 0) {
+            let song: Song = this.songs[index];
+            this.songs[index] = this.songs[index-1]; 
+            this.songs[index-1] = song;   
+        }
+    }
+
+    public onMoveDown(index: number): void {
+        if (index < this.songs.length - 1) {
+            let song: Song = this.songs[index];
+            this.songs[index] = this.songs[index+1]; 
+            this.songs[index+1] = song;   
+        }
+        console.log('asdf');
     }
 
     public nextSong(): void {
