@@ -1,12 +1,21 @@
-<h3>
-    Folders
-    <a routerLink="/settings" routerLinkActive="active">Settings</a>
+<div class="header-bar">
+    <button class="toolbar__item" routerLink="/settings" routerLinkActive="active">
+        <img src="assets/svg/gear.svg" width="20" height="20" style="position: relative; top: 1px;">
+    </button>
     <button (click)="goToPlaylist()" class="mobile-button goto-playlist-button">P</button>
-</h3>
+    <label class="music-filter-box">
+        Filter:
+        <input type="text" [(ngModel)]="filterText" />
+    </label>
+</div>
 <div class="main-scroll-panel">
-    <div class="list-item toolbar" *ngFor="let treeItem of treeItems">
-        <div (click)="onTreeItemClick(treeItem)"  class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
-        <button class="toolbar__item" (click)="onAddItem(treeItem, true)"><img src="assets/svg/play.svg" width="20" height="20"></button>
-        <button class="toolbar__item" (click)="onAddItem(treeItem, false)"><img src="assets/svg/add.svg" width="20" height="20"></button>
+    <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)">
+        <div (click)="onTreeItemClick(treeItem)" class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
+        <button class="toolbar__item" (click)="onAddItem(treeItem, true)">
+            <img src="assets/svg/play.svg" width="20" height="20">
+        </button>
+        <button class="toolbar__item" (click)="onAddItem(treeItem, false)">
+            <img src="assets/svg/add.svg" width="20" height="20">
+        </button>
     </div>
 </div>

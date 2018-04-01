@@ -13,6 +13,8 @@ import {ScrollbarComponent} from "./scrollbar.component";
 export class FolderBrowserComponent implements OnInit {
     public dirList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());
     public treeItems: Array<TreeItem> = new Array<TreeItem>();
+    public filterText: String;
+    public triggerFilterUpdate: boolean = false;
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
@@ -29,6 +31,7 @@ export class FolderBrowserComponent implements OnInit {
             for (let song of this.dirList.songs) {
                 this.treeItems.push(song);
             }
+            this.triggerFilterUpdate = !this.triggerFilterUpdate;
         });
     }
 
@@ -48,6 +51,7 @@ export class FolderBrowserComponent implements OnInit {
             this.treeItems.splice(index + 1, 0, ...subItems);
             folder.expanded = true;
         }
+        this.triggerFilterUpdate = !this.triggerFilterUpdate;
     }
 
     public onAddItem(item: TreeItem, play: boolean): void {
@@ -63,10 +67,12 @@ export class FolderBrowserComponent implements OnInit {
         for (let subFolder of folder.folders) {
             subFolder.depth = depth + 1;
             subFolder.isFolder = true;
+            subFolder.parent = folder;
             this.updateDepth(subFolder, depth + 1);
         }
         for (let song of folder.songs) {
             song.depth = depth + 1;
+            song.parent = folder;
         }
     }
 

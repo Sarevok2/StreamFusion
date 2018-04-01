@@ -1,3 +1,4 @@
+import { SongFilterPipe } from './pipe/song.filter.pipe';
 import { AppConfig } from './app.config';
 import { FolderService } from './service/folder.service';
 import { PlaylistComponent } from './component/playlist.component';
@@ -26,7 +27,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, HomeComponent, PlaylistComponent, FolderBrowserComponent, AudioComponent, SettingsComponent, ScrollbarComponent
+    AppComponent, HomeComponent, PlaylistComponent, FolderBrowserComponent, AudioComponent, SettingsComponent, ScrollbarComponent, SongFilterPipe
   ],
   imports: [
     RouterModule.forRoot(
