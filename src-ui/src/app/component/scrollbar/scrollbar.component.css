@@ -1,0 +1,28 @@
+.scrollbar {
+    position: relative;
+}
+
+.scrollbar__container {
+  overflow: hidden;
+  overflow-anchor: none;
+  position: relative;
+  height: 100%;
+}
+
+.scrollbar__vertical-bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: rgba(100, 100, 100, 0.5);
+	width: 10px;
+	height: 100%;
+    border-radius: 5px;
+}
+
+.scrollbar__vertical-marker {
+	background-color: #333;
+	position: absolute;
+	right: 1px;
+	width: 8px;
+    border-radius: 5px;
+}

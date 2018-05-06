@@ -28,10 +28,10 @@ export class AppConfig {
 
     public setApiEndpoint(apiEndpoint: string) {
         if (apiEndpoint && apiEndpoint.length > 0) {
-            if (apiEndpoint.indexOf("http://") != 0 && apiEndpoint.indexOf("https://") != 0) {
+            if (apiEndpoint.indexOf("http://") !== 0 && apiEndpoint.indexOf("https://") !== 0) {
                 apiEndpoint = "http://" + apiEndpoint;
             }
-            if (apiEndpoint.slice(-1) != "/") {
+            if (apiEndpoint.slice(-1) !== "/") {
                 apiEndpoint += "/";
             }
         }

@@ -99,68 +99,6 @@ button {
     margin-right: 0px;
 }
 
-.audio-comp {
-    margin-bottom: 5px;
-    margin-top: 5px;
-}
-
-.seek-bar {
-	height: 20px;
-	background: #4200f7;
-	margin: 4px 10px;
-	border-radius: 15px;
-    flex-grow: 1;
-}
-
-.seek-marker{
-	width: 18px;
-	height: 18px;
-	border-radius: 50%;
-	margin-top: 1px;
-	background: rgba(0, 255, 196, 0.82);
-}
-
-.settings-button-bar {
-    padding-top: 10px;
-}
-
-.settings-button-bar__button {
-    width: 70px;
-}
-
-.scrollbar {
-    position: relative;
-}
-
-.scrollbar__container {
-  overflow: hidden;
-  overflow-anchor: none;
-  position: relative;
-  height: 100%;
-}
-
-.scrollbar__vertical-bar {
-	position: absolute;
-	top: 0;
-	right: 0;
-	background-color: rgba(100, 100, 100, 0.5);
-	width: 10px;
-	height: 100%;
-    border-radius: 5px;
-}
-
-.scrollbar__vertical-marker {
-	background-color: #333;
-	position: absolute;
-	right: 1px;
-	width: 8px;
-    border-radius: 5px;
-}
-
-.music-filter-box {
-    padding-left: 10px;
-}
-
 ::-webkit-scrollbar {
     width: 10px;
 }

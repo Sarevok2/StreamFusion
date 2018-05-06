@@ -2,17 +2,18 @@ import {Component, ElementRef, HostListener, Input, ViewChild} from '@angular/co
 
 @Component({
   selector: 'scrollbar',
-  templateUrl: 'scrollbar.component.html'
+  templateUrl: 'scrollbar.component.html',
+  styleUrls: ['scrollbar.component.css']
 })
-export class ScrollbarComponent{
-	public showVertical: boolean = true;
-	public showHorizontal: boolean = false;
-	public verticalMarkerTop: string = '0px';
-	public verticalMarkerHeight: string = '0px';
+export class ScrollbarComponent {
+    public showVertical: boolean = true;
+    public showHorizontal: boolean = false;
+    public verticalMarkerTop: string = '0px';
+    public verticalMarkerHeight: string = '0px';
     public horizontalMarkerLeft: string = '0px';
     public horizontalMarkerWidth: string = '0px';
-	@Input() public enableVerticalScrollbar: boolean = true;
-	@Input() public enableHorizontalScrollbar: boolean = true;
+    @Input() public enableVerticalScrollbar: boolean = true;
+    @Input() public enableHorizontalScrollbar: boolean = true;
     @ViewChild('scrollContainer') private scrollContainer: ElementRef;
     private isMouseOnElement: boolean = false;
     private isTouchDown: boolean = false;
@@ -28,11 +29,13 @@ export class ScrollbarComponent{
         this.showVertical = false;
     }
 
-	public updateSize(): void {
-	    setTimeout(()=> {
-            let scrollMarkerSize: number = Math.pow(this.scrollContainer.nativeElement.clientHeight, 2) / this.scrollContainer.nativeElement.scrollHeight - 2;
+    public updateSize(): void {
+        setTimeout(() => {
+            let scrollMarkerSize: number = Math.pow(
+                this.scrollContainer.nativeElement.clientHeight, 2) / this.scrollContainer.nativeElement.scrollHeight - 2;
             this.verticalMarkerHeight = scrollMarkerSize + 'px';
-            scrollMarkerSize = Math.pow(this.scrollContainer.nativeElement.clientWidth, 2) / this.scrollContainer.nativeElement.scrollWidth - 2;
+            scrollMarkerSize = Math.pow(
+                this.scrollContainer.nativeElement.clientWidth, 2) / this.scrollContainer.nativeElement.scrollWidth - 2;
             this.horizontalMarkerWidth = scrollMarkerSize + 'px';
             this.updateScrollMarkerStart();
             this.updateScrollbarVisibility();
@@ -40,11 +43,11 @@ export class ScrollbarComponent{
     }
 
     @HostListener("wheel", ['$event'])
-	private onWindowScroll(event: WheelEvent) {
-		this.scrollContainer.nativeElement.scrollTop -= (event.wheelDeltaY / 2);
+    private onWindowScroll(event: WheelEvent) {
+        this.scrollContainer.nativeElement.scrollTop -= (event.wheelDeltaY / 2);
         this.updateScrollMarkerStart();
         event.stopPropagation();
-	}
+    }
 
     @HostListener("mouseenter")
     private onMouseEnter() {
@@ -57,32 +60,6 @@ export class ScrollbarComponent{
         this.isMouseOnElement = false;
         this.updateScrollbarVisibility();
     }
-
-/*    @HostListener("touchstart", ['$event'])
-    private onTouchStart(event: TouchEvent) {
-        this.isTouchDown = true;
-        let touch: Touch = event.targetTouches[0];
-        if (touch) {
-            this.touchStartX = touch.pageX;
-            this.touchStartY = touch.pageY;
-            this.touchScrollStartX = this.scrollContainer.nativeElement.scrollLeft;
-            this.touchScrollStartY = this.scrollContainer.nativeElement.scrollTop;
-        }
-        this.updateScrollbarVisibility();
-        event.stopPropagation();
-    }
-
-    @HostListener("touchmove", ['$event'])
-    private onTouchMove(event: TouchEvent) {
-        let touch: Touch = event.targetTouches[0];
-        if (touch) {
-            this.scrollContainer.nativeElement.scrollLeft = this.touchScrollStartX + this.touchStartX - touch.pageX;
-            this.scrollContainer.nativeElement.scrollTop = this.touchScrollStartY + this.touchStartY - touch.pageY;
-        }
-        this.updateScrollMarkerStart();
-        event.stopPropagation();
-        event.preventDefault();
-    }*/
 
     @HostListener("touchend")
     private onTouchEnd() {
@@ -104,11 +81,11 @@ export class ScrollbarComponent{
         const mouseStart: number = isVert ? event.clientY : event.clientX;
         const scrollStart: number = isVert ? scrollEl.scrollTop : scrollEl.scrollLeft;
         this.isDraggingScrollbar = true;
-        const moveHandler = (event: MouseEvent) => {
+        const moveHandler = (mEvent: MouseEvent) => {
             if (isVert) {
-                scrollEl.scrollTop = ((event.clientY - mouseStart)/ scrollEl.clientHeight*scrollEl.scrollHeight) + scrollStart;
+                scrollEl.scrollTop = ((mEvent.clientY - mouseStart) / scrollEl.clientHeight * scrollEl.scrollHeight) + scrollStart;
             } else {
-                scrollEl.scrollLeft = ((event.clientX - mouseStart)/ scrollEl.clientWidth*scrollEl.scrollWidth) + scrollStart;
+                scrollEl.scrollLeft = ((mEvent.clientX - mouseStart) / scrollEl.clientWidth * scrollEl.scrollWidth) + scrollStart;
             }
             this.updateScrollMarkerStart();
             event.preventDefault();
@@ -122,17 +99,21 @@ export class ScrollbarComponent{
         })
     }
 
-	private updateScrollMarkerStart(): void {
-        let scrollMarkerStart: number = this.scrollContainer.nativeElement.clientHeight * this.scrollContainer.nativeElement.scrollTop / this.scrollContainer.nativeElement.scrollHeight + 1;
+    private updateScrollMarkerStart(): void {
+        let scrollMarkerStart: number = this.scrollContainer.nativeElement.clientHeight *
+            this.scrollContainer.nativeElement.scrollTop / this.scrollContainer.nativeElement.scrollHeight + 1;
         this.verticalMarkerTop = scrollMarkerStart + 'px';
-        scrollMarkerStart = this.scrollContainer.nativeElement.clientWidth * this.scrollContainer.nativeElement.scrollLeft / this.scrollContainer.nativeElement.scrollWidth + 1;
+        scrollMarkerStart = this.scrollContainer.nativeElement.clientWidth *
+            this.scrollContainer.nativeElement.scrollLeft / this.scrollContainer.nativeElement.scrollWidth + 1;
         this.horizontalMarkerLeft = scrollMarkerStart + 'px';
     }
 
     private updateScrollbarVisibility(): void {
         if (this.isMouseOnElement || this.isTouchDown) {
-            this.showVertical = this.enableVerticalScrollbar && (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
-            this.showHorizontal = this.enableHorizontalScrollbar && (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
+            this.showVertical = this.enableVerticalScrollbar &&
+                (this.scrollContainer.nativeElement.scrollHeight > this.scrollContainer.nativeElement.clientHeight);
+            this.showHorizontal = this.enableHorizontalScrollbar &&
+                (this.scrollContainer.nativeElement.scrollWidth > this.scrollContainer.nativeElement.clientWidth);
         } else {
             this.showVertical = this.enableVerticalScrollbar && this.isDraggingScrollbar;
             this.showHorizontal = this.enableHorizontalScrollbar && this.isDraggingScrollbar;

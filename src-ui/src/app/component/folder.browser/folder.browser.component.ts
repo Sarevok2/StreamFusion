@@ -1,14 +1,14 @@
-import { Folder } from '../model/folder';
+import { Folder } from '../../model/folder';
 import {Component, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
-import { FolderService } from '../service/folder.service';
-import { Song } from "../model/song";
-import {TreeItem} from "../model/tree.item";
+import { FolderService } from '../../service/folder.service';
+import { Song } from "../../model/song";
+import {TreeItem} from "../../model/tree.item";
 import {Tree} from "@angular/router/src/utils/tree";
-import {ScrollbarComponent} from "./scrollbar.component";
 
 @Component({
     selector: 'folder-browser',
-    templateUrl: 'folder.browser.component.html'
+    templateUrl: 'folder.browser.component.html',
+    styleUrls: ['folder.browser.component.css']
 })
 export class FolderBrowserComponent implements OnInit {
     public dirList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());

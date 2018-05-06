@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Song} from "../model/song";
-import {AudioComponent} from "./audio.component";
-import { AppConfig } from '../app.config';
-import {AudioService} from "../service/audio.service";
-import {ScrollbarComponent} from "./scrollbar.component";
+import {Song} from "app/model/song";
+import {AudioComponent} from "../audio/audio.component";
+import { AppConfig } from '../../app.config';
+import {AudioService} from "app/service/audio.service";
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 

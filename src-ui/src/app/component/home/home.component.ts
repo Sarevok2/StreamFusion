@@ -1,7 +1,6 @@
 import {Component, ElementRef, ViewChild} from "@angular/core";
-import {PlaylistComponent} from "./playlist.component";
-import {AudioComponent} from "./audio.component";
-import {ScrollbarComponent} from "./scrollbar.component";
+import {PlaylistComponent} from "../playlist/playlist.component";
+import {AudioComponent} from "../audio/audio.component";
 
 @Component({
     selector: 'home',

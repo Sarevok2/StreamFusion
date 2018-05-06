@@ -1,9 +1,10 @@
 import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
-import {AudioService} from "../service/audio.service";
+import {AudioService} from "../../service/audio.service";
 
 @Component({
     selector: 'audio-player',
-    templateUrl: "audio.component.html"
+    templateUrl: 'audio.component.html',
+    styleUrls: ['audio.component.css']
 })
 export class AudioComponent implements OnInit {
     public currentTime: string = "0.00";

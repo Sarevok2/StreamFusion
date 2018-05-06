@@ -1,10 +1,11 @@
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {AppConfig} from "../app.config";
+import {AppConfig} from "../../app.config";
 
 @Component({
     selector: 'settings-dialog',
-    templateUrl: 'settings.component.html'
+    templateUrl: 'settings.component.html',
+    styleUrls: ['settings.component.css']
 })
 export class SettingsComponent implements OnInit {
     public serverUrl: string;
