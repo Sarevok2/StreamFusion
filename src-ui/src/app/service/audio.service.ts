@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {BehaviorSubject, Subject} from 'rxjs';
 import {AudioContainer, AudioContainerHTML, AudioContainerMedia} from "./audio.container";
-import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class AudioService {
