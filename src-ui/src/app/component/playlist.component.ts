@@ -15,7 +15,6 @@ export class PlaylistComponent implements OnInit {
     public songs: Array<Song> = [];
     private currentIndex: number = 0;
     @Output() private onGoToBrowser = new EventEmitter();
-    @ViewChild('playlistScrollbar') private playlistScrollbar: ScrollbarComponent;
 
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
 
@@ -33,7 +32,6 @@ export class PlaylistComponent implements OnInit {
         } else {
             this.songs = this.songs.concat(params.songs);
         }
-        this.playlistScrollbar.updateSize();
     }
 
     public onPlaySong(index: number): void {
@@ -43,26 +41,25 @@ export class PlaylistComponent implements OnInit {
 
     public onRemoveSong(index: number): void {
         this.songs.splice(index, 1);
-        this.playlistScrollbar.updateSize();
     }
 
     public onCloneSong(index: number): void {
-        this.songs.splice(index, 0, this.songs[index]);    
+        this.songs.splice(index, 0, this.songs[index]);
     }
 
     public onMoveUp(index: number): void {
         if (index > 0) {
             let song: Song = this.songs[index];
-            this.songs[index] = this.songs[index-1]; 
-            this.songs[index-1] = song;   
+            this.songs[index] = this.songs[index - 1];
+            this.songs[index - 1] = song;
         }
     }
 
     public onMoveDown(index: number): void {
         if (index < this.songs.length - 1) {
             let song: Song = this.songs[index];
-            this.songs[index] = this.songs[index+1]; 
-            this.songs[index+1] = song;   
+            this.songs[index] = this.songs[index + 1];
+            this.songs[index + 1] = song;
         }
         console.log('asdf');
     }
@@ -73,7 +70,7 @@ export class PlaylistComponent implements OnInit {
     }
 
     public previousSong(): void {
-        this.currentIndex = (this.currentIndex==0) ? (this.songs.length-1) : ((this.currentIndex - 1) % this.songs.length);
+        this.currentIndex = (this.currentIndex === 0) ? (this.songs.length - 1) : ((this.currentIndex - 1) % this.songs.length);
         this.playCurrentSong();
     }
 
@@ -81,7 +78,6 @@ export class PlaylistComponent implements OnInit {
         this.songs = [];
         this.currentIndex = 0;
         this.audioService.stop();
-        this.playlistScrollbar.updateSize();
     }
 
     public goToBrowser(): void {
