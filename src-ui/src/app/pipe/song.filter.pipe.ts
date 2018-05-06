@@ -20,12 +20,12 @@ export class SongFilterPipe implements PipeTransform {
     private searchChildren(item: TreeItem, filterText: string): boolean {
         if (item.isFolder) {
             let folder: Folder = <Folder>item;
-            for (let i=0; i<folder.songs.length; i++) {
-                if (folder.songs[i].fileName.toLowerCase().indexOf(filterText.toLowerCase()) != -1) {
+            for (let i = 0; i < folder.songs.length; i++) {
+                if (folder.songs[i].fileName.toLowerCase().indexOf(filterText.toLowerCase()) !== -1) {
                     return true;
                 }
             }
-            for (let i=0; i<folder.folders.length; i++) {
+            for (let i = 0; i < folder.folders.length; i++) {
                 if (this.searchForText(folder.folders[i], filterText)) {
                     return true;
                 }
@@ -35,11 +35,11 @@ export class SongFilterPipe implements PipeTransform {
     }
 
     private searchParents(item: TreeItem, filterText: string): boolean {
-        if (item.fileName.toLowerCase().indexOf(filterText.toLowerCase()) != -1) {
+        if (item.fileName.toLowerCase().indexOf(filterText.toLowerCase()) !== -1) {
             return true;
         } else if (item.parent) {
             return this.searchParents(item.parent, filterText);
-        }    
+        }
         return false;
     }
 }

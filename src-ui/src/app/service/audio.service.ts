@@ -51,14 +51,14 @@ export class AudioService {
 
     public playSong(url: string, nextUrl?: string): void {
         this.isPlaying = false;
-        if (this.preLoaded && url == this.nextUrl) {
+        if (this.preLoaded && url === this.nextUrl) {
             this.audioContainer.pause();
             let tempAudio: AudioContainer = this.audioContainer;
             this.audioContainer = this.audioContainer2;
             this.audioContainer2 = tempAudio;
             this.audioContainer.play();
             this.songChangedSubject.next(null);
-            //TODO: may still be in the process of loading
+            // TODO: may still be in the process of loading
         } else {
             this.audioContainer.setUrl(url);
         }
