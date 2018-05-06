@@ -1,5 +1,5 @@
 <div class="main-panel">
-    <audioPlayer (previousSong)="onPreviousSong()" (nextSong)="onNextSong()"></audioPlayer>
+    <audio-player (previousSong)="onPreviousSong()" (nextSong)="onNextSong()"></audio-player>
     <div class="content-panel">
         <folder-browser class="main-list-panel" [ngClass]="{'hide-mobile': browserHidden}" (onAddSongs)="onAddSongs($event)"
                         (onGoToPlaylist)="showPlaylist()"></folder-browser>

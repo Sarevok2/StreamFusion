@@ -19,7 +19,7 @@ export class FolderBrowserComponent implements OnInit {
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
 
-    public constructor(private folderService: FolderService){}
+    public constructor(private folderService: FolderService) {}
 
     ngOnInit(): void {
         this.folderService.getFolderList().subscribe((folderList: Folder) => {
@@ -36,7 +36,9 @@ export class FolderBrowserComponent implements OnInit {
     }
 
     public onTreeItemClick(item: TreeItem): void {
-        if (!item.isFolder) return;
+        if (!item.isFolder) {
+            return;
+        }
         let folder: Folder = <Folder>item;
         let index: number = this.treeItems.indexOf(folder);
         if (folder.expanded) {

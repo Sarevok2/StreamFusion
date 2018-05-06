@@ -61,7 +61,6 @@ export class PlaylistComponent implements OnInit {
             this.songs[index] = this.songs[index + 1];
             this.songs[index + 1] = song;
         }
-        console.log('asdf');
     }
 
     public nextSong(): void {
@@ -88,7 +87,7 @@ export class PlaylistComponent implements OnInit {
         if (this.songs.length > 0) {
             const currentSong: Song = this.songs[this.currentIndex];
             const nextSong: Song = this.songs[(this.currentIndex + 1) % this.songs.length];
-            const url: string = this.createPlayTrackURL(currentSong.path,currentSong.fileName);
+            const url: string = this.createPlayTrackURL(currentSong.path, currentSong.fileName);
             const nextUrl: string = this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + nextSong.path + "/" + nextSong.fileName;
             this.audioService.playSong(url, nextUrl);
         }

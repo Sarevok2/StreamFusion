@@ -2,7 +2,7 @@ import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
 import {AudioService} from "../service/audio.service";
 
 @Component({
-    selector: 'audioPlayer',
+    selector: 'audio-player',
     templateUrl: "audio.component.html"
 })
 export class AudioComponent implements OnInit {
@@ -57,7 +57,7 @@ export class AudioComponent implements OnInit {
 
     public onSeekBarClick(event: MouseEvent): void {
         let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
-        this.seekMarkerPos = (newPosition*100) + "%";
+        this.seekMarkerPos = (newPosition * 100) + "%";
         this.audioService.setPosition(newPosition);
     }
 
@@ -77,19 +77,15 @@ export class AudioComponent implements OnInit {
         }
     }
 
-/*    private drawTimeRanges(): void {
-        let timeRanges: any = this.audioElement.buffered;
-        for (let timeRange of timeRanges) {
-
-        }
-    }*/
-
     private formatTime(seconds: number): string {
         let dateString: string = new Date(seconds * 1000).toISOString();
 
         let offset: number = 4;
-        if (seconds >= 600 && seconds < 3600) {offset = 3;}
-        else if (seconds >= 3600) {offset = 1;}
+        if (seconds >= 600 && seconds < 3600) {
+            offset = 3;
+        } else if (seconds >= 3600) {
+            offset = 1;
+        }
 
         return dateString.substr(11 + offset, 8 - offset);
     }
