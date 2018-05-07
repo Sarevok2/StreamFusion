@@ -3,12 +3,14 @@
       <img [hidden]="isPlaying()" src="assets/svg/play.svg" alt="play" width="20" height="20">
       <img [hidden]="!isPlaying()" src="assets/svg/pause.svg" alt="pause" width="20" height="20">
   </button>
-  <button class="toolbar__item" (click)="onPreviousSong()"><img src="assets/svg/previous.svg" width="20" height="20"></button>
-  <button (click)="onNextSong()">
+  <button class="toolbar__item" (click)="onPreviousSong()">
+    <img src="assets/svg/previous.svg" width="20" height="20">
+  </button>
+  <button class="toolbar__item" (click)="onNextSong()">
     <img src="assets/svg/next.svg" width="20" height="20">
   </button>
-  <div class="toolbar__item">{{currentTime}}/{{duration}}</div>
+  <div class="toolbar__item track-time">{{currentTime}}/{{duration}}</div>
   <div id="seek-bar" class="seek-bar toolbar__item" (click)="onSeekBarClick($event)">
-     <div [style.marginLeft]="seekMarkerPos" id="seek-marker" class="seek-marker"></div>
+     <div [style.width]="seekMarkerPos" id="seek-marker" class="seek-marker"></div>
   </div>
 </div>

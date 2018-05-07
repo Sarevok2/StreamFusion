@@ -5,3 +5,11 @@
 .settings-button-bar__button {
     width: 70px;
 }
+
+button {
+    background-color: #333;
+    border: 1px solid #888;
+    border-radius: 5px;
+    margin: 5px;
+    color: #ccc;
+}

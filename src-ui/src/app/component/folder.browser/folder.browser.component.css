@@ -1,3 +1,17 @@
-.music-filter-box {
-    padding-left: 10px;
+.filter-field {
+    position: relative;
+}
+
+.filter-field .text-field {
+    padding-left: 28px;
+}
+
+.filter-field__icon {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+}
+
+.spacer {
+	flex-grow: 1;
 }

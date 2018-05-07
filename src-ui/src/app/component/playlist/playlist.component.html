@@ -1,14 +1,14 @@
 <div class="header-bar">
-    Playlist
-    <button (click)="clear()">
-        <img src="assets/svg/remove-symbol.svg" width="20" height="20">
+    <span class="toolbar__item">Playlist</span>
+    <button class="toolbar__item" (click)="clear()">
+        <img src="assets/svg/trash.svg" width="20" height="20">
     </button>
     <button (click)="goToBrowser()" class="mobile-button goto-browser-button">B</button>
 </div>
 <div class="main-scroll-panel">
     <div class="list-item toolbar" *ngFor="let song of songs; let i = index">
         <div class="toolbar-text">
-            <span *ngIf="i == currentIndex">* </span>{{(i+1) + " - " + song.title + " - " + song.artist + "/" + song.album}}
+            <span *ngIf="i == currentIndex">* </span>{{song.title + " - " + song.artist}}<span *ngIf="song.album">{{"/" + song.album}}</span>
         </div>
         <button class="toolbar__item" (click)="onMoveUp(i)">
             <img src="assets/svg/up.svg" width="20" height="20">
@@ -23,7 +23,7 @@
             <img src="assets/svg/play.svg" width="20" height="20">
         </button>
         <button class="toolbar__item" (click)="onRemoveSong(i)">
-            <img src="assets/svg/remove-symbol.svg" width="20" height="20">
+            <img src="assets/svg/trash.svg" width="20" height="20">
         </button>
     </div>
 </div>

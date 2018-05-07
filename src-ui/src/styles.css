@@ -1,5 +1,5 @@
 body {
-	background-color: #222222;
+	background-color: #111;
 	color: white;
 	font-size: 20px;
 	margin: 0;
@@ -14,13 +14,15 @@ a:link, a:visited, .file-link {
 .main-panel {
 	height: 100vh;
 	display: flex;
-	flex-direction: column;
+    flex-direction: column;
+    background: linear-gradient(to top right, #121212, #202020, #121212);
 }
 
 .content-panel {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     min-height: 0;
 }
 
@@ -30,39 +32,55 @@ a:link, a:visited, .file-link {
     }
 
     .main-list-panel {
-        width:50%;
+        width: 50%;
     }
 }
-
 
 .main-list-panel {
     display: flex;
     flex-direction: column;
+    margin: 15px;
+    max-width: 1000px;
+    background-color: #111;
 }
 
 .main-scroll-panel {
     overflow-y: auto;
     min-height: 0;
+    padding: 8px;
 }
 
 .list-item {
 	padding: 5px;
     height: 27px;
 	border-color: #222222;
-	border-top: solid 1px #777777;
+	border-bottom: solid 1px #444;
 }
 
 .header-bar {
-    background-color: #333333;
     display: flex;
-    padding: 2px 5px;
-    min-height: 28px;
+    align-items: center;
+    padding: 0 10px;
+    min-height: 35px;
+    background-color: #333;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.text-field {
+    background-color: #bbb;
+    border-radius: 20px;
+    border: none;
+    height: 20px;
+    padding: 0 10px;
+    outline: none;
 }
 
 button {
     background: none;
     border: none;	
-	color: #555;
+    color: #555;
+    outline: none;
 }
 
 button:hover {
@@ -112,9 +130,10 @@ button:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #313131;
+    background: #181818;
+    border-radius: 20px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #777;
 }
