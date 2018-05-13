@@ -29,6 +29,7 @@ export class PlaylistComponent implements OnInit {
         if (params.play) {
             this.currentIndex = 0;
             this.songs = params.songs;
+            this.songHistory = [];
             this.playCurrentSong();
         } else {
             this.songs = this.songs.concat(params.songs);
@@ -42,6 +43,7 @@ export class PlaylistComponent implements OnInit {
 
     public onRemoveSong(index: number): void {
         this.songs.splice(index, 1);
+        this.songHistory = [];
     }
 
     public onCloneSong(index: number): void {
@@ -90,6 +92,7 @@ export class PlaylistComponent implements OnInit {
     public clear(): void {
         this.songs = [];
         this.currentIndex = 0;
+        this.songHistory = [];
         this.audioService.stop();
     }
 
