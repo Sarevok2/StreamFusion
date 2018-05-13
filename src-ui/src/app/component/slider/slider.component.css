@@ -1,0 +1,13 @@
+.slider {
+	height: 8px;
+	background: #111;
+	border-radius: 15px;
+	margin: 0 5px;
+}
+
+.slider-marker {
+	height: 8px;
+	border-radius: 15px;
+    width: 0;
+    background-color: #11aaff;
+}

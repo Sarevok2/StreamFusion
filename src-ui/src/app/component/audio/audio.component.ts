@@ -1,5 +1,6 @@
-import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Inject, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import {AudioService} from "../../service/audio.service";
+import { SliderComponent } from '../slider/slider.component';
 
 @Component({
     selector: 'audio-player',
@@ -9,17 +10,15 @@ import {AudioService} from "../../service/audio.service";
 export class AudioComponent implements OnInit {
     public currentTime: string = "0.00";
     public duration: string = "0.00";
-    public seekMarkerPos: string;
 
     @Output() public previousSong: EventEmitter<void> = new EventEmitter();
     @Output() public nextSong: EventEmitter<void> = new EventEmitter();
 
-    private seekBarElement: HTMLDivElement;
+    @ViewChild('seekSlider') public seekSlider: SliderComponent;
 
     constructor(@Inject(AudioService) private audioService: AudioService) {}
 
     ngOnInit(): void {
-        this.seekBarElement = <HTMLDivElement>document.getElementById("seek-bar");
         this.audioService.timeUpdateSubject.subscribe({
             next: (currentTime: number) => this.onTimeUpdate(currentTime)
         });
@@ -56,10 +55,12 @@ export class AudioComponent implements OnInit {
         this.nextSong.emit();
     }
 
-    public onSeekBarClick(event: MouseEvent): void {
-        let newPosition: number = (event.offsetX / this.seekBarElement.offsetWidth);
-        this.seekMarkerPos = (newPosition * 100) + "%";
-        this.audioService.setPosition(newPosition);
+    public setVolume(volume: number): void {
+        this.audioService.setVolume(volume);
+    }
+
+    public setSeekPosition(position: number): void {
+        this.audioService.setPosition(position);
     }
 
     private onSongChanged(): void {
@@ -71,7 +72,7 @@ export class AudioComponent implements OnInit {
 
     private onTimeUpdate(currentTime: number): void {
         let percentComplete: number = currentTime / this.audioService.getDuration() * 100;
-        this.seekMarkerPos = percentComplete + "%";
+        this.seekSlider.setPosition(percentComplete);
 
         if (!isNaN(currentTime)) {
             this.currentTime = this.formatTime(currentTime);

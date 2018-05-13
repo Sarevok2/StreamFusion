@@ -7,6 +7,7 @@ export interface AudioContainer {
     getDuration(): number;
     getCurrentTime(): Promise<number>;
     setPosition(currentPosition: number): void;
+    setVolume(volume: number): void;
 }
 
 export class AudioContainerHTML implements AudioContainer {
@@ -45,6 +46,10 @@ export class AudioContainerHTML implements AudioContainer {
 
     public setPosition(currentPosition: number): void {
         this.audioElement.currentTime = this.audioElement.duration * currentPosition;
+    }
+
+    public setVolume(volume: number): void {
+        this.audioElement.volume = volume;
     }
 
     private onTimeUpdate(): void {
@@ -92,6 +97,10 @@ export class AudioContainerMedia implements AudioContainer {
 
     public setPosition(currentPosition: number): void {
         this.media.seekTo(currentPosition);
+    }
+
+    public setVolume(volume: number): void {
+        this.media.setVolume(volume);
     }
 
     private onTimeUpdate(): void {

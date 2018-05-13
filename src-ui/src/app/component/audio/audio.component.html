@@ -9,8 +9,8 @@
   <button class="toolbar__item" (click)="onNextSong()">
     <img src="assets/svg/next.svg" width="20" height="20">
   </button>
+  <img class="toolbar__item volume-icon" src="assets/svg/volume.svg" alt="volume" width="20" height="20"> 
+  <slider class="toolbar__item volume-slider" (positionChanged)="setVolume($event)" [updateOnDrag]="true" [startValue]="100"></slider>
   <div class="toolbar__item track-time">{{currentTime}}/{{duration}}</div>
-  <div id="seek-bar" class="seek-bar toolbar__item" (click)="onSeekBarClick($event)">
-     <div [style.width]="seekMarkerPos" id="seek-marker" class="seek-marker"></div>
-  </div>
+  <slider #seekSlider class="toolbar__item seek-slider" (positionChanged)="setSeekPosition($event)" [updateOnDrag]="false" [startValue]="0"></slider>
 </div>

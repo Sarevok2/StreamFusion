@@ -1,0 +1,5 @@
+<div #slider class="slider" 
+        (click)="onClick($event)"
+        (mousedown)="onMouseDown($event)">
+    <div [style.width]="markerPos + '%'" class="slider-marker"></div>
+</div>

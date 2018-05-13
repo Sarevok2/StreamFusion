@@ -85,6 +85,10 @@ export class AudioService {
     public setPosition(newPosition: number): void {
         this.audioContainer.setPosition(newPosition);
     }
+
+    public setVolume(volume: number): void {
+        this.audioContainer.setVolume(volume);
+    }
 }
 
 

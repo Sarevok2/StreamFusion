@@ -5,19 +5,17 @@
 	background-color: #393939;
 }
 
-.seek-bar {
-	height: 8px;
-	background: #111;
-	border-radius: 15px;
-	flex-grow: 1;
-	margin: 0 5px;
+.volume-icon {
+	margin-right: 2px !important;
 }
 
-.seek-marker {
-	height: 8px;
-	border-radius: 15px;
-	background-color: #2277ff;
-	width: 0;
+.volume-slider {
+	flex-basis: 100px;
+	margin-left: 0px !important;
+}
+
+.seek-slider {
+	flex-grow: 1;
 }
 
 .toolbar__item {

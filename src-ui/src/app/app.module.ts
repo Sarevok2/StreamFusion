@@ -13,6 +13,7 @@ import { HomeComponent } from './component/home/home.component';
 import { SettingsComponent } from "./component/settings/settings.component";
 import { Routes, RouterModule } from "@angular/router";
 import { AudioService } from "./service/audio.service";
+import { SliderComponent } from './component/slider/slider.component';
 
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -27,7 +28,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, HomeComponent, PlaylistComponent, FolderBrowserComponent,
-      AudioComponent, SettingsComponent, SongFilterPipe
+      AudioComponent, SettingsComponent, SliderComponent, SongFilterPipe
   ],
   imports: [
     RouterModule.forRoot(

@@ -131,7 +131,6 @@ button:hover {
 
 ::-webkit-scrollbar-thumb {
     background: #181818;
-    border-radius: 20px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
