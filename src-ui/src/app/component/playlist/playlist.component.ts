@@ -12,7 +12,9 @@ const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 })
 export class PlaylistComponent implements OnInit {
     public songs: Array<Song> = [];
+    public shuffle: boolean = false;
     private currentIndex: number = 0;
+    private songHistory: Array<number> = [];
     @Output() private onGoToBrowser = new EventEmitter();
 
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
@@ -63,13 +65,26 @@ export class PlaylistComponent implements OnInit {
     }
 
     public nextSong(): void {
-        this.currentIndex = (this.currentIndex + 1) % this.songs.length;
+        this.songHistory.push(this.currentIndex);
+        if (!this.shuffle) {
+            this.currentIndex = (this.currentIndex + 1) % this.songs.length;
+        } else {
+            this.currentIndex = Math.floor(Math.random() * Math.floor(this.songs.length));
+        }
         this.playCurrentSong();
     }
 
     public previousSong(): void {
-        this.currentIndex = (this.currentIndex === 0) ? (this.songs.length - 1) : ((this.currentIndex - 1) % this.songs.length);
+        if (!this.shuffle) {
+            this.currentIndex = (this.currentIndex === 0) ? (this.songs.length - 1) : ((this.currentIndex - 1) % this.songs.length);
+        } else if (this.songHistory.length > 0) {
+            this.currentIndex = this.songHistory.pop();
+        }
         this.playCurrentSong();
+    }
+
+    public toggleShuffle(): void {
+        this.shuffle = !this.shuffle;
     }
 
     public clear(): void {

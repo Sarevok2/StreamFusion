@@ -4,18 +4,17 @@
         <img src="assets/svg/search.svg" class="filter-field__icon" width="16" height="16">
         <input class="text-field" type="text" [(ngModel)]="filterText" />
     </div>
-    <div class="spacer"></div>
-    <button class="toolbar__item" routerLink="/settings" routerLinkActive="active">
+    <button class="toolbar__item toolbar--push-right" routerLink="/settings" routerLinkActive="active" title="Settings">
         <img src="assets/svg/gear.svg" width="20" height="20" style="position: relative; top: 1px;">
     </button>
 </div>
 <div class="main-scroll-panel">
     <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)">
         <div (click)="onTreeItemClick(treeItem)" class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
-        <button class="toolbar__item" (click)="onAddItem(treeItem, true)">
+        <button class="toolbar__item" (click)="onAddItem(treeItem, true)" title="Play">
             <img src="assets/svg/play.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onAddItem(treeItem, false)">
+        <button class="toolbar__item" (click)="onAddItem(treeItem, false)" title="Add to Playlist">
             <img src="assets/svg/add.svg" width="20" height="20">
         </button>
     </div>

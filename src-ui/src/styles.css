@@ -84,7 +84,12 @@ button {
 }
 
 button:hover {
-    background-color: #444444;
+    background-color: #444;
+    border-radius: 5px;
+}
+
+.button-enabled {
+    background-color: #606060 !important;
     border-radius: 5px;
 }
 
@@ -117,8 +122,13 @@ button:hover {
 .toolbar__item {
     margin: 0px 5px;
 }
+
 .toolbar__item:last-child {
     margin-right: 0px;
+}
+
+.toolbar--push-right {
+    margin-left: auto;
 }
 
 ::-webkit-scrollbar {

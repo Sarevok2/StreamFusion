@@ -1,6 +1,9 @@
 <div class="header-bar">
     <span class="toolbar__item">Playlist</span>
-    <button class="toolbar__item" (click)="clear()">
+    <button class="toolbar__item toolbar--push-right" [ngClass]="{'button-enabled': shuffle}" (click)="toggleShuffle()">
+        <img src="assets/svg/shuffle.svg" width="20" height="20" style="position: relative; top: 1px;">
+    </button>
+    <button class="toolbar__item" (click)="clear()" title="Clear Playlist">
         <img src="assets/svg/trash.svg" width="20" height="20">
     </button>
     <button (click)="goToBrowser()" class="mobile-button goto-browser-button">B</button>
@@ -10,19 +13,19 @@
         <div class="toolbar-text">
             <span *ngIf="i == currentIndex">* </span>{{song.title + " - " + song.artist}}<span *ngIf="song.album">{{"/" + song.album}}</span>
         </div>
-        <button class="toolbar__item" (click)="onMoveUp(i)">
+        <button class="toolbar__item" (click)="onMoveUp(i)" title="Move Up">
             <img src="assets/svg/up.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onMoveDown(i)">
+        <button class="toolbar__item" (click)="onMoveDown(i)" title="Move Down">
             <img src="assets/svg/down.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onCloneSong(i)">
+        <button class="toolbar__item" (click)="onCloneSong(i)" title="Copy">
             <img src="assets/svg/clone.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onPlaySong(i)">
+        <button class="toolbar__item" (click)="onPlaySong(i)" title="Play">
             <img src="assets/svg/play.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onRemoveSong(i)">
+        <button class="toolbar__item" (click)="onRemoveSong(i)" title="Remove">
             <img src="assets/svg/trash.svg" width="20" height="20">
         </button>
     </div>
