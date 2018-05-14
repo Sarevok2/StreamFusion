@@ -8,8 +8,8 @@
         <img src="assets/svg/gear.svg" width="20" height="20" style="position: relative; top: 1px;">
     </button>
 </div>
-<div class="main-scroll-panel">
-    <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)">
+<div #scrollPanel class="main-scroll-panel">
+    <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)" [ngClass]="{'list-item--zero-height': treeItem.isZeroHeight}">
         <div (click)="onTreeItemClick(treeItem)" class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
         <button class="toolbar__item" (click)="onAddItem(treeItem, true)" title="Play">
             <img src="assets/svg/play.svg" width="20" height="20">

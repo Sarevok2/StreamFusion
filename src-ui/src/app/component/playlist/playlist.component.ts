@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
 import {Song} from "app/model/song";
 import {AudioComponent} from "../audio/audio.component";
 import { AppConfig } from '../../app.config';
 import {AudioService} from "app/service/audio.service";
+import {Observable} from "rxjs";
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 
@@ -17,6 +18,8 @@ export class PlaylistComponent implements OnInit {
     private songHistory: Array<number> = [];
     @Output() private onGoToBrowser = new EventEmitter();
 
+    @ViewChild('scrollPanel') private scrollPanel: ElementRef;
+
     constructor (private appConfig: AppConfig, private audioService: AudioService) {}
 
     ngOnInit(): void {
@@ -26,13 +29,15 @@ export class PlaylistComponent implements OnInit {
     }
 
     public addSongs(params: any) {
+        let newSongs: Array<Song> = this.copySongArray(params.songs);
         if (params.play) {
             this.currentIndex = 0;
-            this.songs = params.songs;
+            this.songs = [];
+            this.insertSongs(newSongs, 0);
             this.songHistory = [];
             this.playCurrentSong();
         } else {
-            this.songs = this.songs.concat(params.songs);
+            this.insertSongs(newSongs, this.songs.length - 1);
         }
     }
 
@@ -42,12 +47,18 @@ export class PlaylistComponent implements OnInit {
     }
 
     public onRemoveSong(index: number): void {
-        this.songs.splice(index, 1);
-        this.songHistory = [];
+        this.songs[index].isZeroHeight = true;
+        const transitionEndFn = () => {
+            this.songs.splice(index, 1);
+            this.songHistory = [];
+            this.scrollPanel.nativeElement.removeEventListener('transitionend', transitionEndFn);
+        };
+        this.scrollPanel.nativeElement.addEventListener('transitionend', transitionEndFn);
     }
 
     public onCloneSong(index: number): void {
-        this.songs.splice(index, 0, this.songs[index]);
+        let newSong: Song = Object.assign({}, this.songs[index]);
+        this.insertSongs([newSong], index);
     }
 
     public onMoveUp(index: number): void {
@@ -100,6 +111,16 @@ export class PlaylistComponent implements OnInit {
         this.onGoToBrowser.emit();
     }
 
+    private insertSongs(newSongs: Array<Song>, index: number): void {
+        newSongs.forEach((song) => song.isZeroHeight = true);
+        this.songs.splice(index, 0, ...newSongs);
+        Observable.timer(0).subscribe( () => {
+            for (let song of newSongs) {
+                song.isZeroHeight = false;
+            }
+        });
+    }
+
     private playCurrentSong(): void {
         if (this.songs.length > 0) {
             const currentSong: Song = this.songs[this.currentIndex];
@@ -112,5 +133,13 @@ export class PlaylistComponent implements OnInit {
 
     private createPlayTrackURL(path: string, fileName: string): string {
         return this.appConfig.getApiEndpoint() + PLAY_TRACK_COMMAND + encodeURIComponent(path) + "/" + encodeURIComponent(fileName);
+    }
+
+    private copySongArray(songs: Array<Song>): Array<Song> {
+        let newSongs: Array<Song> = [];
+        songs.forEach((song) => {
+            newSongs.push(Object.assign({}, song));
+        });
+        return newSongs;
     }
 }

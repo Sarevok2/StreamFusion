@@ -1,9 +1,10 @@
 import { Folder } from '../../model/folder';
-import {Component, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import { FolderService } from '../../service/folder.service';
 import { Song } from "../../model/song";
 import {TreeItem} from "../../model/tree.item";
 import {Tree} from "@angular/router/src/utils/tree";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'folder-browser',
@@ -19,6 +20,8 @@ export class FolderBrowserComponent implements OnInit {
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
 
+    @ViewChild('scrollPanel') private scrollPanel: ElementRef;
+
     public constructor(private folderService: FolderService) {}
 
     ngOnInit(): void {
@@ -27,6 +30,7 @@ export class FolderBrowserComponent implements OnInit {
             this.updateDepth(this.dirList, 0);
             for (let subFolder of this.dirList.folders) {
                 this.treeItems.push(subFolder);
+                subFolder.isZeroHeight = false;
             }
             for (let song of this.dirList.songs) {
                 this.treeItems.push(song);
@@ -46,10 +50,22 @@ export class FolderBrowserComponent implements OnInit {
             while (endIndex < this.treeItems.length && this.treeItems[endIndex].depth > folder.depth) {
                 endIndex++;
             }
-            this.treeItems.splice(index + 1, endIndex - index - 1);
-            this.collapseAll(folder);
+            for (let i = index + 1; i < endIndex; i++) {
+                this.treeItems[i].isZeroHeight = true;
+            }
+            const transitionEndFn = () => {
+                this.treeItems.splice(index + 1, endIndex - index - 1);
+                this.collapseAll(folder);
+                this.scrollPanel.nativeElement.removeEventListener('transitionend', transitionEndFn);
+            }
+            this.scrollPanel.nativeElement.addEventListener('transitionend', transitionEndFn);
         } else {
             let subItems: Array<TreeItem> = (<Array<TreeItem>>folder.folders).concat(folder.songs);
+            Observable.timer(0).subscribe( () => {
+                for (let subItem of subItems) {
+                    subItem.isZeroHeight = false;
+                }
+            });
             this.treeItems.splice(index + 1, 0, ...subItems);
             folder.expanded = true;
         }
@@ -69,12 +85,14 @@ export class FolderBrowserComponent implements OnInit {
         for (let subFolder of folder.folders) {
             subFolder.depth = depth + 1;
             subFolder.isFolder = true;
+            subFolder.isZeroHeight = true;
             subFolder.parent = folder;
             this.updateDepth(subFolder, depth + 1);
         }
         for (let song of folder.songs) {
             song.depth = depth + 1;
             song.parent = folder;
+            song.isZeroHeight = true;
         }
     }
 

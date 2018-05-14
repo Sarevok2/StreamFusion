@@ -51,10 +51,16 @@ a:link, a:visited, .file-link {
 }
 
 .list-item {
-	padding: 5px;
-    height: 27px;
+	padding: 0 5px;
+    height: 37px;
 	border-color: #222222;
-	border-bottom: solid 1px #444;
+    border-bottom: solid 1px #444;
+    transition: height 0.2s;
+    overflow: hidden;
+}
+
+.list-item--zero-height {
+    height: 0px;
 }
 
 .header-bar {
@@ -110,6 +116,7 @@ button:hover {
 
 .toolbar {
   display: flex;
+  align-items: center;
 }
 
 .toolbar-text {
