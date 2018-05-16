@@ -37,7 +37,7 @@ export class PlaylistComponent implements OnInit {
             this.songHistory = [];
             this.playCurrentSong();
         } else {
-            this.insertSongs(newSongs, this.songs.length - 1);
+            this.insertSongs(newSongs, this.songs.length);
         }
     }
 
@@ -58,7 +58,7 @@ export class PlaylistComponent implements OnInit {
 
     public onCloneSong(index: number): void {
         let newSong: Song = Object.assign({}, this.songs[index]);
-        this.insertSongs([newSong], index);
+        this.insertSongs([newSong], index + 1);
     }
 
     public onMoveUp(index: number): void {
