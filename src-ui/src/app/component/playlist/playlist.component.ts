@@ -47,13 +47,7 @@ export class PlaylistComponent implements OnInit {
     }
 
     public onRemoveSong(index: number): void {
-        this.songs[index].isZeroHeight = true;
-        const transitionEndFn = () => {
-            this.songs.splice(index, 1);
-            this.songHistory = [];
-            this.scrollPanel.nativeElement.removeEventListener('transitionend', transitionEndFn);
-        };
-        this.scrollPanel.nativeElement.addEventListener('transitionend', transitionEndFn);
+        this.removeSong(index);
     }
 
     public onCloneSong(index: number): void {
@@ -63,17 +57,17 @@ export class PlaylistComponent implements OnInit {
 
     public onMoveUp(index: number): void {
         if (index > 0) {
-            let song: Song = this.songs[index];
-            this.songs[index] = this.songs[index - 1];
-            this.songs[index - 1] = song;
+            let prevSong: Song = Object.assign({}, this.songs[index - 1]);
+            this.removeSong(index - 1);
+            this.insertSongs([prevSong], index + 1);
         }
     }
 
     public onMoveDown(index: number): void {
         if (index < this.songs.length - 1) {
-            let song: Song = this.songs[index];
-            this.songs[index] = this.songs[index + 1];
-            this.songs[index + 1] = song;
+            let nextSong: Song = Object.assign({}, this.songs[index + 1]);
+            this.insertSongs([nextSong], index);
+            this.removeSong(index + 2);
         }
     }
 
@@ -109,6 +103,16 @@ export class PlaylistComponent implements OnInit {
 
     public goToBrowser(): void {
         this.onGoToBrowser.emit();
+    }
+
+    private removeSong(index: number): void {
+        this.songs[index].isZeroHeight = true;
+        const transitionEndFn = () => {
+            this.songs.splice(index, 1);
+            this.songHistory = [];
+            this.scrollPanel.nativeElement.removeEventListener('transitionend', transitionEndFn);
+        };
+        this.scrollPanel.nativeElement.addEventListener('transitionend', transitionEndFn);
     }
 
     private insertSongs(newSongs: Array<Song>, index: number): void {

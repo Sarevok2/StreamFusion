@@ -11,12 +11,12 @@
 <div class="main-scroll-panel" #scrollPanel>
     <div class="list-item toolbar" *ngFor="let song of songs; let i = index" [ngClass]="{'list-item--zero-height': song.isZeroHeight}">
         <div class="toolbar-text">
-            <span *ngIf="i == currentIndex">* </span>{{song.title + " - " + song.artist}}<span *ngIf="song.album">{{"/" + song.album}}</span>
+            <span *ngIf="i == currentIndex">* </span>{{song.title}}-{{song.artist}}<span *ngIf="song.album">/{{song.album}}</span>
         </div>
-        <button class="toolbar__item" (click)="onMoveUp(i)" title="Move Up">
+        <button class="toolbar__item" (click)="onMoveUp(i)" title="Move Up" [ngClass]="{'button-hidden': i === 0}">
             <img src="assets/svg/up.svg" width="20" height="20">
         </button>
-        <button class="toolbar__item" (click)="onMoveDown(i)" title="Move Down">
+        <button class="toolbar__item" (click)="onMoveDown(i)" title="Move Down" [ngClass]="{'button-hidden': i === songs.length - 1}">
             <img src="assets/svg/down.svg" width="20" height="20">
         </button>
         <button class="toolbar__item" (click)="onCloneSong(i)" title="Copy">

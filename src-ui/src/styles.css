@@ -99,6 +99,10 @@ button:hover {
     border-radius: 5px;
 }
 
+.button-hidden {
+    visibility: hidden;
+}
+
 .mobile-button {
     display: none;
     font-size: 22px;
