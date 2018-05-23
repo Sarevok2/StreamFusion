@@ -11,3 +11,9 @@
     top: 6px;
     left: 8px;
 }
+
+.mode-select {
+    background-color: #bbb;
+    padding: 2px 5px;
+    border-radius: 3px;
+}

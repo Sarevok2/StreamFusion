@@ -10,7 +10,7 @@ const FOLDER_LIST_COMMAND: string = "folders";
 @Injectable()
 export class FolderService {
 
-    constructor (private http:HttpClient,
+    constructor (private http: HttpClient,
         private appConfig: AppConfig) {}
 
     public getFolderList(): Observable<Folder> {

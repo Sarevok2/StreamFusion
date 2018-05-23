@@ -6,6 +6,9 @@ import {TreeItem} from "../../model/tree.item";
 import {Tree} from "@angular/router/src/utils/tree";
 import {Observable} from "rxjs";
 
+const BROWSE_FOLDERS = "Folders";
+const BROWSE_ARTISTS = "Artists";
+
 @Component({
     selector: 'folder-browser',
     templateUrl: 'folder.browser.component.html',
@@ -13,9 +16,12 @@ import {Observable} from "rxjs";
 })
 export class FolderBrowserComponent implements OnInit {
     public dirList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());
+    public artistList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());
     public treeItems: Array<TreeItem> = new Array<TreeItem>();
     public filterText: String;
     public triggerFilterUpdate: boolean = false;
+    public browseModes = [BROWSE_FOLDERS, BROWSE_ARTISTS];
+    public currentBrowseMode: string = this.browseModes[0];
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
@@ -27,15 +33,9 @@ export class FolderBrowserComponent implements OnInit {
     ngOnInit(): void {
         this.folderService.getFolderList().subscribe((folderList: Folder) => {
             this.dirList = folderList;
-            this.updateDepth(this.dirList, 0);
-            for (let subFolder of this.dirList.folders) {
-                this.treeItems.push(subFolder);
-                subFolder.isZeroHeight = false;
-            }
-            for (let song of this.dirList.songs) {
-                this.treeItems.push(song);
-            }
-            this.triggerFilterUpdate = !this.triggerFilterUpdate;
+            this.initFolderList(this.dirList, 0);
+            this.initArtistList(folderList);
+            this.updateTreeItems();
         });
     }
 
@@ -81,13 +81,70 @@ export class FolderBrowserComponent implements OnInit {
         this.onGoToPlaylist.emit();
     }
 
-    private updateDepth(folder: Folder, depth: number): void {
+    public onBrowseModeChange(): void {
+        this.updateTreeItems();
+    }
+
+    private initArtistList(folderList: Folder): void {
+        for (let song of folderList.songs) {
+            this.addSongToArtistList(song);
+        }
+        for (let folder of folderList.folders) {
+            this.initArtistList(folder);
+        }
+        this.artistList.folders.sort((folder1, folder2) => folder1.fileName.localeCompare(folder2.fileName));
+    }
+
+    private updateTreeItems(): void {
+        let currentList: Folder = (this.currentBrowseMode === BROWSE_FOLDERS) ? this.dirList : this.artistList;
+        this.treeItems = [];
+        for (let subFolder of currentList.folders) {
+            this.treeItems.push(subFolder);
+            subFolder.isZeroHeight = false;
+        }
+        for (let song of currentList.songs) {
+            this.treeItems.push(song);
+        }
+        this.triggerFilterUpdate = !this.triggerFilterUpdate;
+    }
+
+    private addSongToArtistList(song: Song): void {
+        let artistName = song.artist || "No Artist";
+        let artistFolder: Folder = this.artistList.folders.find(folder => folder.fileName.toUpperCase() === artistName.toUpperCase());
+        if (!artistFolder) {
+            artistFolder = new Folder(artistName, [], []);
+            artistFolder.isFolder = true;
+            artistFolder.isZeroHeight = true;
+            artistFolder.parent = this.artistList;
+            artistFolder.depth = 1;
+            this.artistList.folders.push(artistFolder);
+        }
+        let newSong: Song = Object.assign({}, song);
+        let albumFolder: Folder;
+        if (song.album) {
+            albumFolder = artistFolder.folders.find(folder => folder.fileName.toUpperCase() === song.album.toUpperCase());
+            if (!albumFolder) {
+                albumFolder = new Folder(song.album, [], []);
+                albumFolder.isFolder = true;
+                albumFolder.depth = 2;
+                albumFolder.parent = artistFolder;
+                artistFolder.folders.push(albumFolder);
+            }
+            newSong.depth = 3;
+        } else {
+            albumFolder = artistFolder;
+            newSong.depth = 2;
+        }
+        albumFolder.songs.push(newSong);
+    }
+
+    private initFolderList(folder: Folder, depth: number): void {
         for (let subFolder of folder.folders) {
             subFolder.depth = depth + 1;
             subFolder.isFolder = true;
             subFolder.isZeroHeight = true;
             subFolder.parent = folder;
-            this.updateDepth(subFolder, depth + 1);
+            this.initFolderList(subFolder, depth + 1);
         }
         for (let song of folder.songs) {
             song.depth = depth + 1;

@@ -1,9 +1,12 @@
 <div class="header-bar">    
     <button (click)="goToPlaylist()" class="mobile-button">P</button>
-    <div class="filter-field">
+    <div class="filter-field toolbar__item">
         <img src="assets/svg/search.svg" class="filter-field__icon" width="16" height="16">
         <input class="text-field" type="text" [(ngModel)]="filterText" />
     </div>
+    <select [(ngModel)]="currentBrowseMode" (change)="onBrowseModeChange()" class="mode-select toolbar__item">
+        <option *ngFor="let bmode of browseModes" [ngValue]="bmode">{{bmode}}</option>
+    </select>
     <button class="toolbar__item toolbar--push-right" routerLink="/settings" routerLinkActive="active" title="Settings">
         <img src="assets/svg/gear.svg" width="20" height="20" style="position: relative; top: 1px;">
     </button>
