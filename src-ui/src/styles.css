@@ -76,10 +76,9 @@ a:link, a:visited, .file-link {
 
 .text-field {
     background-color: #bbb;
-    border-radius: 20px;
+    border-radius: 22px;
     border: none;
-    height: 20px;
-    padding: 0 10px;
+    height: 22px;
     outline: none;
 }
 

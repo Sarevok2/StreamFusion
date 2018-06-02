@@ -1,5 +1,7 @@
 .filter-field {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .filter-field .text-field {
@@ -8,7 +10,7 @@
 
 .filter-field__icon {
     position: absolute;
-    top: 6px;
+    top: 5px;
     left: 8px;
 }
 
@@ -16,4 +18,5 @@
     background-color: #bbb;
     padding: 2px 5px;
     border-radius: 3px;
+    margin-left: 10px;
 }
