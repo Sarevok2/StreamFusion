@@ -22,6 +22,7 @@ export class FolderBrowserComponent implements OnInit {
     public triggerFilterUpdate: boolean = false;
     public browseModes = [BROWSE_FOLDERS, BROWSE_ARTISTS];
     public currentBrowseMode: string = this.browseModes[0];
+    public isLoading: boolean = true;
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
@@ -34,8 +35,8 @@ export class FolderBrowserComponent implements OnInit {
         this.folderService.getFolderList().subscribe((folderList: Folder) => {
             this.dirList = folderList;
             this.initFolderList(this.dirList, 0);
-            this.initArtistList(folderList);
             this.updateTreeItems();
+            this.isLoading = false;
         });
     }
 
@@ -82,7 +83,18 @@ export class FolderBrowserComponent implements OnInit {
     }
 
     public onBrowseModeChange(): void {
-        this.updateTreeItems();
+        if (this.currentBrowseMode === BROWSE_ARTISTS && this.artistList.folders.length === 0) {
+            this.isLoading = true;
+            Observable.timer(0).subscribe(() => {
+                this.initArtistList(this.dirList);
+                console.log(3, this.artistList);
+                this.artistList.folders.sort((folder1, folder2) => folder1.fileName.localeCompare(folder2.fileName));
+                this.updateTreeItems();
+                this.isLoading = false;
+            });
+        } else {
+            this.updateTreeItems();
+        }
     }
 
     private initArtistList(folderList: Folder): void {
@@ -92,7 +104,6 @@ export class FolderBrowserComponent implements OnInit {
         for (let folder of folderList.folders) {
             this.initArtistList(folder);
         }
-        this.artistList.folders.sort((folder1, folder2) => folder1.fileName.localeCompare(folder2.fileName));
     }
 
     private updateTreeItems(): void {
