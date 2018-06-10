@@ -78,8 +78,19 @@ export class FolderBrowserComponent implements OnInit {
     }
 
     public onAddItem(item: TreeItem, play: boolean): void {
-        let songs: Array<Song> = item.isFolder ? (<Folder>item).songs : [<Song>item];
+        let songs: Array<Song>;
+        if (item.isFolder) {
+            songs = [];
+            this.addSongsFromDir(songs, <Folder>item);
+        } else {
+            songs = [<Song>item];
+        }
         this.onAddSongs.emit({songs: songs, play: play});
+    }
+
+    private addSongsFromDir(songs: Array<Song>, folder: Folder) {
+        folder.songs.forEach((song: Song) => songs.push(song));
+        folder.folders.forEach((subFolder: Folder) => this.addSongsFromDir(songs, subFolder));
     }
 
     public goToPlaylist(): void {
@@ -91,7 +102,6 @@ export class FolderBrowserComponent implements OnInit {
             this.isLoading = true;
             Observable.timer(0).subscribe(() => {
                 this.initArtistList(this.dirList);
-                console.log(3, this.artistList);
                 this.artistList.folders.sort((folder1, folder2) => folder1.fileName.localeCompare(folder2.fileName));
                 this.updateTreeItems();
                 this.isLoading = false;
