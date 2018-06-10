@@ -23,6 +23,7 @@ export class FolderBrowserComponent implements OnInit {
     public browseModes = [BROWSE_FOLDERS, BROWSE_ARTISTS];
     public currentBrowseMode: string = this.browseModes[0];
     public isLoading: boolean = true;
+    public loadingError: String;
 
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
@@ -37,6 +38,9 @@ export class FolderBrowserComponent implements OnInit {
             this.initFolderList(this.dirList, 0);
             this.updateTreeItems();
             this.isLoading = false;
+        }, (error: any) => {
+            this.isLoading = false;
+            this.loadingError = error.message;
         });
     }
 
