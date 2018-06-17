@@ -64,6 +64,14 @@ a:link, a:visited, .file-link {
     height: 0px;
 }
 
+.list-item--drag-target {
+    box-shadow: 0px 5px 3px -1px rgba(255, 255, 190, .75); 
+}
+
+.list-item--first-drag-target {
+    box-shadow: 0px -5px 3px -1px rgba(255, 255, 190, .75); 
+}
+
 .header-bar {
     display: flex;
     align-items: center;

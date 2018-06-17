@@ -16,6 +16,9 @@ export class PlaylistComponent implements OnInit {
     public shuffle: boolean = false;
     private currentIndex: number = 0;
     private songHistory: Array<number> = [];
+    private currentDropTarget: Song;
+    private currentDropTargetIndex: number;
+    private draggedSongIndex: number;
     @Output() private onGoToBrowser = new EventEmitter();
 
     @ViewChild('scrollPanel') private scrollPanel: ElementRef;
@@ -99,6 +102,47 @@ export class PlaylistComponent implements OnInit {
         this.currentIndex = 0;
         this.songHistory = [];
         this.audioService.stop();
+    }
+
+    public onDragStart(song: Song, index: number): void {
+        this.draggedSongIndex = index;
+    }
+
+    public onDragEnd(song: Song): void {
+        this.currentDropTarget.isDragTarget = false;
+        this.currentDropTarget.isFirstDragTarget = false;
+        if (this.currentDropTargetIndex !== this.draggedSongIndex && this.currentDropTargetIndex !== (this.draggedSongIndex - 1)) {
+            let newIndex: number = this.currentDropTargetIndex + 1;
+            let draggedSongCopy: Song = Object.assign({}, this.songs[this.draggedSongIndex]);
+            this.insertSongs([draggedSongCopy], newIndex);
+            if (newIndex < this.draggedSongIndex) {
+                this.draggedSongIndex++;
+            }
+            this.removeSong(this.draggedSongIndex);
+        }
+    }
+
+    public onDragEnter(song: Song, index: number): void {
+        song.isDragTarget = true;
+        if (this.currentDropTarget && song !== this.currentDropTarget) {
+            this.currentDropTarget.isDragTarget = false;
+            this.currentDropTarget.isFirstDragTarget = false;
+        }
+        this.currentDropTarget = song;
+        this.currentDropTargetIndex = index;
+    }
+
+    public onHeaderDragEnter(): void {
+        if (this.songs.length > 0) {
+            let song: Song = this.songs[0];
+            song.isFirstDragTarget = true;
+            if (this.currentDropTarget && song !== this.currentDropTarget) {
+                this.currentDropTarget.isDragTarget = false;
+                this.currentDropTarget.isFirstDragTarget = false;
+            }
+            this.currentDropTarget = song;
+            this.currentDropTargetIndex = -1;
+        }
     }
 
     public goToBrowser(): void {
