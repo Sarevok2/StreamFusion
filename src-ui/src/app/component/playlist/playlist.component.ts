@@ -1,3 +1,4 @@
+import { FolderService } from './../../service/folder.service';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
 import {Song} from "app/model/song";
 import {AudioComponent} from "../audio/audio.component";
@@ -19,13 +20,19 @@ export class PlaylistComponent implements OnInit {
     private currentDropTarget: Song;
     private currentDropTargetIndex: number;
     private draggedSongIndex: number;
+    private externalDraggedSongs: Array<Song>;
+    private draggingPlaylistSong: boolean = false;
     @Output() private onGoToBrowser = new EventEmitter();
 
     @ViewChild('scrollPanel') private scrollPanel: ElementRef;
 
-    constructor (private appConfig: AppConfig, private audioService: AudioService) {}
+    constructor (private appConfig: AppConfig, private audioService: AudioService, private folderService: FolderService) {}
 
     ngOnInit(): void {
+        this.folderService.getSongDragObs().subscribe((songs) => {
+            this.externalDraggedSongs = songs;
+            this.draggingPlaylistSong = false;
+        });
         this.audioService.songEndedSubject.subscribe({
             next: () => this.nextSong()
         });
@@ -106,12 +113,15 @@ export class PlaylistComponent implements OnInit {
 
     public onDragStart(song: Song, index: number): void {
         this.draggedSongIndex = index;
+        this.draggingPlaylistSong = true;
     }
 
-    public onDragEnd(song: Song): void {
+    public onDrop(event: DragEvent): void {
+        event.preventDefault();
         this.currentDropTarget.isDragTarget = false;
         this.currentDropTarget.isFirstDragTarget = false;
-        if (this.currentDropTargetIndex !== this.draggedSongIndex && this.currentDropTargetIndex !== (this.draggedSongIndex - 1)) {
+        if (this.draggingPlaylistSong && this.currentDropTargetIndex !== this.draggedSongIndex &&
+                this.currentDropTargetIndex !== (this.draggedSongIndex - 1)) {
             let newIndex: number = this.currentDropTargetIndex + 1;
             let draggedSongCopy: Song = Object.assign({}, this.songs[this.draggedSongIndex]);
             this.insertSongs([draggedSongCopy], newIndex);
@@ -119,30 +129,32 @@ export class PlaylistComponent implements OnInit {
                 this.draggedSongIndex++;
             }
             this.removeSong(this.draggedSongIndex);
+        } else if (!this.draggingPlaylistSong) {
+            this.insertSongs(this.externalDraggedSongs, this.currentDropTargetIndex + 1);
         }
+        this.draggingPlaylistSong = false;
     }
 
     public onDragEnter(song: Song, index: number): void {
         song.isDragTarget = true;
-        if (this.currentDropTarget && song !== this.currentDropTarget) {
-            this.currentDropTarget.isDragTarget = false;
-            this.currentDropTarget.isFirstDragTarget = false;
-        }
-        this.currentDropTarget = song;
-        this.currentDropTargetIndex = index;
+        this.updateDropTarget(song, index);
     }
 
     public onHeaderDragEnter(): void {
         if (this.songs.length > 0) {
             let song: Song = this.songs[0];
             song.isFirstDragTarget = true;
-            if (this.currentDropTarget && song !== this.currentDropTarget) {
-                this.currentDropTarget.isDragTarget = false;
-                this.currentDropTarget.isFirstDragTarget = false;
-            }
-            this.currentDropTarget = song;
-            this.currentDropTargetIndex = -1;
+            this.updateDropTarget(song, -1);
         }
+    }
+
+    private updateDropTarget(song: Song, index: number) {
+        if (this.currentDropTarget && song !== this.currentDropTarget) {
+            this.currentDropTarget.isDragTarget = false;
+            this.currentDropTarget.isFirstDragTarget = false;
+        }
+        this.currentDropTarget = song;
+        this.currentDropTargetIndex = index;
     }
 
     public goToBrowser(): void {

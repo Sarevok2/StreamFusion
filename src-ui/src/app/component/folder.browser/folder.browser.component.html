@@ -12,7 +12,8 @@
     </button>
 </div>
 <div #scrollPanel class="main-scroll-panel">
-    <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)" [ngClass]="{'list-item--zero-height': treeItem.isZeroHeight}">
+    <div class="list-item toolbar" *ngFor="let treeItem of (treeItems | songFilter: filterText : triggerFilterUpdate)" 
+        [ngClass]="{'list-item--zero-height': treeItem.isZeroHeight}" draggable="true" (dragstart)="onDragStart(treeItem, $event)">
         <div (click)="onTreeItemClick(treeItem)" class="toolbar-text" [ngClass]="{'file-link': treeItem.isFolder}" [ngStyle]="{'padding-left.px': (treeItem.depth-1)*15}">{{treeItem.fileName}}</div>
         <button class="toolbar__item" (click)="onAddItem(treeItem, true)" title="Play">
             <img src="assets/svg/play.svg" width="20" height="20">

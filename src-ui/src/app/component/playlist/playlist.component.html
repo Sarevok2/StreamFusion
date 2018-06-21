@@ -1,4 +1,4 @@
-<div class="header-bar" (dragenter)="onHeaderDragEnter()">
+<div class="header-bar" (dragenter)="onHeaderDragEnter()"  (drop)="onDrop($event)" ondragover="event.preventDefault()">
     <span class="toolbar__item">Playlist</span>
     <button class="toolbar__item toolbar--push-right" [ngClass]="{'button-enabled': shuffle}" (click)="toggleShuffle()" title="Shuffle">
         <img src="assets/svg/shuffle.svg" width="20" height="20" style="position: relative; top: 1px;">
@@ -11,7 +11,7 @@
 <div class="main-scroll-panel" #scrollPanel>
     <div class="list-item toolbar" *ngFor="let song of songs; let i = index" 
         [ngClass]="{'list-item--zero-height': song.isZeroHeight, 'list-item--drag-target': song.isDragTarget, 'list-item--first-drag-target': song.isFirstDragTarget}" 
-        draggable="true" (dragstart)="onDragStart(song, i)" (dragend)="onDragEnd(song)" (dragenter)="onDragEnter(song, i)">
+        draggable="true" (dragstart)="onDragStart(song, i)" (drop)="onDrop($event)" (dragenter)="onDragEnter(song, i)" ondragover="event.preventDefault()">
         <div class="toolbar-text">
             <span *ngIf="i == currentIndex">* </span>{{song.title}} - {{song.artist}}<span *ngIf="song.album"> / {{song.album}}</span>
         </div>

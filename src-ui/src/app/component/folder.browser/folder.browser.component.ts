@@ -111,6 +111,16 @@ export class FolderBrowserComponent implements OnInit {
         }
     }
 
+    public onDragStart(treeItem: TreeItem, event: DragEvent): void {
+        let songs: Array<Song> = [];
+        if (treeItem.isFolder) {
+            this.addSongsFromDir(songs, <Folder>treeItem);
+        } else {
+            songs.push(<Song>treeItem);
+        }
+        this.folderService.startDraggingSongs(songs);
+    }
+
     private initArtistList(folderList: Folder): void {
         for (let song of folderList.songs) {
             this.addSongToArtistList(song);
