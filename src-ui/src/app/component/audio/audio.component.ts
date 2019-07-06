@@ -14,7 +14,7 @@ export class AudioComponent implements OnInit {
     @Output() public previousSong: EventEmitter<void> = new EventEmitter();
     @Output() public nextSong: EventEmitter<void> = new EventEmitter();
 
-    @ViewChild('seekSlider') public seekSlider: SliderComponent;
+    @ViewChild('seekSlider',  {static: false}) public seekSlider: SliderComponent;
 
     constructor(@Inject(AudioService) private audioService: AudioService) {}
 

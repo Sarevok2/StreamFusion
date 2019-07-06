@@ -24,7 +24,7 @@ export class PlaylistComponent implements OnInit {
     private draggingPlaylistSong: boolean = false;
     @Output() private onGoToBrowser = new EventEmitter();
 
-    @ViewChild('scrollPanel') private scrollPanel: ElementRef;
+    @ViewChild('scrollPanel',  {static: false}) private scrollPanel: ElementRef;
 
     constructor (private appConfig: AppConfig, private audioService: AudioService, private folderService: FolderService) {}
 
@@ -130,7 +130,8 @@ export class PlaylistComponent implements OnInit {
             }
             this.removeSong(this.draggedSongIndex);
         } else if (!this.draggingPlaylistSong) {
-            this.insertSongs(this.externalDraggedSongs, this.currentDropTargetIndex + 1);
+            let newSongs: Array<Song> = this.copySongArray(this.externalDraggedSongs);
+            this.insertSongs(newSongs, this.currentDropTargetIndex + 1);
         }
         this.draggingPlaylistSong = false;
     }

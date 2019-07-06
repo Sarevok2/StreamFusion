@@ -1,6 +1,6 @@
 import { OnInit } from '@angular/core';
 import {Component,  Output, EventEmitter, ViewChild, ElementRef, Input, Inject} from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'slider',
@@ -14,7 +14,7 @@ export class SliderComponent implements OnInit {
     public markerPos: number = 0;
     private dragging: boolean = false;
 
-    @ViewChild('slider') private sliderElement: ElementRef;
+    @ViewChild('slider',  {static: false}) private sliderElement: ElementRef;
 
     constructor(@Inject(DOCUMENT) private documentRef: any) {}
 

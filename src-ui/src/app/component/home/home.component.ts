@@ -7,11 +7,11 @@ import {AudioComponent} from "../audio/audio.component";
     templateUrl: "home.component.html"
 })
 export class HomeComponent {
-    @ViewChild(PlaylistComponent) public playlist: PlaylistComponent;
+    @ViewChild(PlaylistComponent,  {static: false}) public playlist: PlaylistComponent;
     public playlistHidden: boolean = true;
     public browserHidden: boolean = false;
 
-    @ViewChild(AudioComponent)
+    @ViewChild(AudioComponent,  {static: false})
     public audio: AudioComponent;
 
     public onAddSongs(params: any): void {

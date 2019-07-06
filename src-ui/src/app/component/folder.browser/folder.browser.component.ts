@@ -3,7 +3,6 @@ import {Component, OnInit, EventEmitter, Output, ViewChild, ElementRef} from '@a
 import { FolderService } from '../../service/folder.service';
 import { Song } from "../../model/song";
 import {TreeItem} from "../../model/tree.item";
-import {Tree} from "@angular/router/src/utils/tree";
 import {Observable} from "rxjs";
 
 const BROWSE_FOLDERS = "Folders";
@@ -28,7 +27,7 @@ export class FolderBrowserComponent implements OnInit {
     @Output() private onAddSongs = new EventEmitter();
     @Output() private onGoToPlaylist = new EventEmitter();
 
-    @ViewChild('scrollPanel') private scrollPanel: ElementRef;
+    @ViewChild('scrollPanel',  {static: false}) private scrollPanel: ElementRef;
 
     public constructor(private folderService: FolderService) {}
 
