@@ -1,10 +1,9 @@
 import { FolderService } from './../../service/folder.service';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
 import {Song} from "app/model/song";
-import {AudioComponent} from "../audio/audio.component";
 import { AppConfig } from '../../app.config';
 import {AudioService} from "app/service/audio.service";
-import {Observable} from "rxjs";
+import { timer } from "rxjs";
 
 const PLAY_TRACK_COMMAND: string = "playtrack?fullpath=";
 
@@ -175,7 +174,7 @@ export class PlaylistComponent implements OnInit {
     private insertSongs(newSongs: Array<Song>, index: number): void {
         newSongs.forEach((song) => song.isZeroHeight = true);
         this.songs.splice(index, 0, ...newSongs);
-        Observable.timer(0).subscribe( () => {
+        timer(0).subscribe( () => {
             for (let song of newSongs) {
                 song.isZeroHeight = false;
             }

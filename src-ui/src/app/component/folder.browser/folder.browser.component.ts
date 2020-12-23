@@ -2,8 +2,8 @@ import { Folder } from '../../model/folder';
 import {Component, OnInit, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import { FolderService } from '../../service/folder.service';
 import { Song } from "../../model/song";
-import {TreeItem} from "../../model/tree.item";
-import {Observable} from "rxjs";
+import { TreeItem } from "../../model/tree.item";
+import { Observable, timer } from "rxjs";
 
 const BROWSE_FOLDERS = "Folders";
 const BROWSE_ARTISTS = "Artists";
@@ -65,7 +65,7 @@ export class FolderBrowserComponent implements OnInit {
             this.scrollPanel.nativeElement.addEventListener('transitionend', transitionEndFn);
         } else {
             let subItems: Array<TreeItem> = (<Array<TreeItem>>folder.folders).concat(folder.songs);
-            Observable.timer(0).subscribe( () => {
+            timer(0).subscribe( () => {
                 for (let subItem of subItems) {
                     subItem.isZeroHeight = false;
                 }
@@ -99,7 +99,7 @@ export class FolderBrowserComponent implements OnInit {
     public onBrowseModeChange(): void {
         if (this.currentBrowseMode === BROWSE_ARTISTS && this.artistList.folders.length === 0) {
             this.isLoading = true;
-            Observable.timer(0).subscribe(() => {
+            timer(0).subscribe(() => {
                 this.initArtistList(this.dirList);
                 this.artistList.folders.sort((folder1, folder2) => folder1.fileName.localeCompare(folder2.fileName));
                 this.updateTreeItems();
