@@ -62,6 +62,9 @@ public class FolderStructureService {
 			throw new IOException("file is not a directory");
 		}
 		File[] files = newFolder.listFiles(fileFilter);
+		if (files == null) {
+			System.out.println(0);
+		}
 		List<File> newSubFolders = Arrays.stream(files).filter(p -> p.isDirectory()).collect(Collectors.toList());
 		List<File> newSongs = Arrays.stream(files).filter(p -> !p.isDirectory()).collect(Collectors.toList());
 		for (File file : newSubFolders) {

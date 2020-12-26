@@ -66,7 +66,7 @@ export class AudioContainerHTML implements AudioContainer {
 }
 
 export class AudioContainerMedia implements AudioContainer {
-    private media: Media;
+    private media!: Media;
 
     constructor (private audioService: AudioService) {}
 

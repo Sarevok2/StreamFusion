@@ -13,7 +13,7 @@ let bootstrap = () => {
     platformBrowserDynamic().bootstrapModule(AppModule);
 };
 
-if(!!window['cordova']){
+if(!!(window as any)['cordova']){
     document.addEventListener('deviceready',bootstrap);
 }else{
     bootstrap();

@@ -17,7 +17,7 @@ export class FolderBrowserComponent implements OnInit {
     public dirList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());
     public artistList: Folder = new Folder("", new Array<Folder>(), new Array<Song>());
     public treeItems: Array<TreeItem> = new Array<TreeItem>();
-    public filterText: String;
+    public filterText: string;
     public triggerFilterUpdate: boolean = false;
     public browseModes = [BROWSE_FOLDERS, BROWSE_ARTISTS];
     public currentBrowseMode: string = this.browseModes[0];
@@ -144,7 +144,7 @@ export class FolderBrowserComponent implements OnInit {
 
     private addSongToArtistList(song: Song): void {
         let artistName = song.artist || "No Artist";
-        let artistFolder: Folder = this.artistList.folders.find(folder => folder.fileName.toUpperCase() === artistName.toUpperCase());
+        let artistFolder = this.artistList.folders.find(folder => folder.fileName.toUpperCase() === artistName.toUpperCase());
         if (!artistFolder) {
             artistFolder = new Folder(artistName, [], []);
             artistFolder.isFolder = true;
@@ -154,9 +154,9 @@ export class FolderBrowserComponent implements OnInit {
             this.artistList.folders.push(artistFolder);
         }
         let newSong: Song = Object.assign({}, song);
-        let albumFolder: Folder;
+        let albumFolder: Folder | undefined;
         if (song.album) {
-            albumFolder = artistFolder.folders.find(folder => folder.fileName.toUpperCase() === song.album.toUpperCase());
+            albumFolder = artistFolder.folders.find(folder => folder.fileName.toUpperCase() === song.album?.toUpperCase());
             if (!albumFolder) {
                 albumFolder = new Folder(song.album, [], []);
                 albumFolder.isFolder = true;

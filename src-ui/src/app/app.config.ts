@@ -9,7 +9,7 @@ export class AppConfig {
     private savedApiEndpoint: string;
 
     constructor() {
-        this.savedApiEndpoint = window.localStorage.getItem(API_ENDPOINT_KEY);
+        this.savedApiEndpoint = window.localStorage.getItem(API_ENDPOINT_KEY) || "";
     }
 
     public getApiEndpoint(): string {

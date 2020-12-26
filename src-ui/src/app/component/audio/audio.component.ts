@@ -23,7 +23,7 @@ export class AudioComponent implements OnInit {
             next: (currentTime: number) => this.onTimeUpdate(currentTime)
         });
         this.audioService.songChangedSubject.subscribe({
-            next: (v) => this.onSongChanged()
+            next: () => this.onSongChanged()
         });
     }
 

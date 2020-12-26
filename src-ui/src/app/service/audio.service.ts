@@ -5,14 +5,14 @@ import {AudioContainer, AudioContainerHTML, AudioContainerMedia} from "./audio.c
 @Injectable()
 export class AudioService {
     public timeUpdateSubject: BehaviorSubject<number>;
-    public songEndedSubject: BehaviorSubject<void>;
+    public songEndedSubject: Subject<void>;
     public songChangedSubject: Subject<void>;
     public isPlaying: boolean = false;
 
     private audioContainer: AudioContainer;
     private audioContainer2: AudioContainer;
     private preLoaded: boolean = false;
-    private isCordova: boolean = !!window["cordova"];
+    private isCordova: boolean = !!(window as any)['cordova'];
     private nextUrl: string;
     private wind: any = window;
 
@@ -20,8 +20,8 @@ export class AudioService {
         this.audioContainer = new AudioContainerHTML(this);
         this.audioContainer2 = new AudioContainerHTML(this);
         this.timeUpdateSubject = new BehaviorSubject(0);
-        this.songEndedSubject = new BehaviorSubject(null);
-        this.songChangedSubject = new BehaviorSubject(null);
+        this.songEndedSubject = new Subject();
+        this.songChangedSubject = new Subject();
     }
 
     public onTimeUpdate(): void {
@@ -35,13 +35,13 @@ export class AudioService {
     }
 
     public onEnded(): void {
-        this.songEndedSubject.next(null);
+        this.songEndedSubject.next();
     }
 
     public onLoadedData(): void {
         if (!this.isPlaying) {
             this.resume();
-            this.songChangedSubject.next(null);
+            this.songChangedSubject.next();
         }
     }
 
@@ -57,12 +57,12 @@ export class AudioService {
             this.audioContainer = this.audioContainer2;
             this.audioContainer2 = tempAudio;
             this.audioContainer.play();
-            this.songChangedSubject.next(null);
+            this.songChangedSubject.next();
             // TODO: may still be in the process of loading
         } else {
             this.audioContainer.setUrl(url);
         }
-        this.nextUrl = nextUrl;
+        this.nextUrl = nextUrl || "";
         this.preLoaded = false;
     }
 
